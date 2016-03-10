@@ -3,9 +3,11 @@ package com.ibm.liberty.starter.it.api.v1;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -13,21 +15,26 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class RunLocalPayloadTest {
-    
+
     private final String extractedZip = "/extractedZip";
     private final String installLog = "/mvnLog/log.txt";
     private final String cleanLog = "/mvnLog/cleanLog.txt";
 
-//    @BeforeClass
-//     check that maven is on the classpath
-//     public static void assertMavenPathSet() {
-//      System.getenv(")
-//    }
-
+    @BeforeClass
+    // Check that maven is on the classpath
+    public static void assertMavenPathSet() throws IOException {
+        File file = new File(System.getProperty("liberty.temp.dir"));
+        Process process = Runtime.getRuntime().exec("cmd /c mvn --version", null, file);
+        InputStream is = process.getInputStream();
+        String output = inputStreamToString(is);
+        assertTrue(output, output.contains("Apache Maven"));
+    }
 
     @Before
     public void downloadZip() throws IOException {
@@ -39,34 +46,48 @@ public class RunLocalPayloadTest {
         InputStream entityInputStream = response.readEntity(InputStream.class);
         extractZip(entityInputStream);
     }
-    
+
     @Test
     public void testLocalMvnInstallRuns() throws Exception {
         testMvnInstall();
         testEndpoint();
         testMvnClean();
     }
-    
-    public void testMvnInstall() throws IOException, InterruptedException {
-        
-        runMvnInstall();
+
+    @After
+    public void shutdownServer() throws IOException, InterruptedException {
+        try {
+            runMvnClean();
+        } catch (AssertionError e) {
+            System.out.println("Caught exception during server shutdown, ignoring because server should be shut down by test " + e.getMessage());
+        }
     }
-    
+
+    public void testMvnInstall() throws IOException, InterruptedException {
+        File logFile = runMvnInstall();
+        FileInputStream fis = new FileInputStream(logFile);
+        String logs = inputStreamToString(fis);
+        assertTrue("testMvnInstall() expected message BUILD SUCCESS in logs located in " + logFile.getAbsolutePath(), logs.contains("BUILD SUCCESS"));
+    }
+
     public void testEndpoint() {
         Client client = ClientBuilder.newClient();
         String url = "http://localhost:9080/myLibertyApp/";
         System.out.println("Testing " + url);
         Response response = client.target(url).request().get();
         int status = response.getStatus();
-        assertTrue("Response status was not 200, found:" + status, status == 200);
+        assertTrue("Endpoint response status was not 200, found:" + status, status == 200);
         String responseString = response.readEntity(String.class);
-        String[] expectedStrings = {"Welcome to your Liberty Application", "Test"};
-        assertTrue("Response incorrect, expected:" + expectedStrings[0] + ", found:" + responseString, responseString.contains(expectedStrings[0]));
-        assertTrue("Response incorrect, expected:" + expectedStrings[1] + ", found:" + responseString, responseString.contains(expectedStrings[1]));
+        String[] expectedStrings = { "Welcome to your Liberty Application", "Test" };
+        assertTrue("Endpoint response incorrect, expected:" + expectedStrings[0] + ", found:" + responseString, responseString.contains(expectedStrings[0]));
+        assertTrue("Endpoint response incorrect, expected:" + expectedStrings[1] + ", found:" + responseString, responseString.contains(expectedStrings[1]));
     }
-    
+
     public void testMvnClean() throws IOException, InterruptedException {
-        runMvnClean();
+        File logFile = runMvnClean();
+        FileInputStream fis = new FileInputStream(logFile);
+        String logs = inputStreamToString(fis);
+        assertTrue("testMvnClean() expected message BUILD SUCCESS in logs located in " + logFile.getAbsolutePath(), logs.contains("BUILD SUCCESS"));
     }
 
     private static void extractZip(InputStream entityInputStream) throws IOException {
@@ -107,10 +128,10 @@ public class RunLocalPayloadTest {
         process.waitFor();
         int exitValue = process.exitValue();
         System.out.println("Exit value is " + exitValue);
-        assertTrue("Expected return value of 0, instead found:" + exitValue, exitValue == 0);
+        assertTrue("runMvnInstall() expected return value of 0, instead found:" + exitValue, exitValue == 0);
         return logFile;
     }
-    
+
     private File runMvnClean() throws IOException, InterruptedException {
         String filePath = System.getProperty("liberty.temp.dir") + extractedZip;
         String logFilePath = System.getProperty("liberty.temp.dir") + cleanLog;
@@ -123,8 +144,20 @@ public class RunLocalPayloadTest {
         process.waitFor();
         int exitValue = process.exitValue();
         System.out.println("Exit value is " + exitValue);
-        assertTrue("Expected return value of 0, instead found:" + exitValue, exitValue == 0);
+        assertTrue("runMvnClean() expected return value of 0, instead found:" + exitValue, exitValue == 0);
         return logFile;
+    }
+
+    private static String inputStreamToString(InputStream inputStream) throws IOException {
+        InputStreamReader isr = new InputStreamReader(inputStream);
+        char[] chars = new char[1024];
+        StringBuilder responseBuilder = new StringBuilder();
+
+        int read;
+        while ((read = isr.read(chars)) != -1) {
+            responseBuilder.append(chars, 0, read);
+        }
+        return responseBuilder.toString();
     }
 
 }
