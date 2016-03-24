@@ -140,7 +140,7 @@ body {
 #banner {
 	position: relative;
 	height: 236px;
-	width: 1280px;
+	width: 100%;
 	margin-left: auto;
 	margin-right: auto;
 	max-height: 330px;
@@ -157,7 +157,7 @@ body {
 
 .banner-img {
     background-image: url("../img/wavelight_unsplash.jpg");
-    background-position: 57.3% 50%;
+    background-position: 58.5% 50%;
     z-index: 3;
     background-size: 4800px;
     background-repeat: no-repeat;
@@ -174,7 +174,7 @@ body {
 	color: #BCDCFF;
 	font-size: 41px;
 	padding-top: 50px;
-	padding-left: 88px;
+	padding-left: 276px;
 	position: relative;
 	z-index: 8;
 }
@@ -190,7 +190,7 @@ body {
 	line-height: 33px;
 	color: #fff;
 	padding-top: 10px;
-	padding-left: 88px;
+	padding-left: 276px;
 	position: relative;
 	z-index: 8;
 	width: 500px;
@@ -201,7 +201,7 @@ body {
     -moz-box-shadow: 0px 0px 5px 2px rgba(102,102,102,1);
     box-shadow: 0px 0px 5px 2px rgba(102,102,102,1);
     background: #fff;
-    bottom: -117px;
+    bottom: -106px;
     position: absolute;
     left: 0px;
     transform: rotate(-3.6deg);
