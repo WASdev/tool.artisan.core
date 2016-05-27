@@ -31,6 +31,18 @@
             "endpoint" : "/springbootweb"
         },
         {
+            "id": "springbootjersey",
+            "name": "Spring Boot with Jersey",
+            "description": "Spring Boot with Jersey",
+            "endpoint" : "/springbootjersey"
+        },
+         {
+            "id": "springbootsecurity",
+            "name": "Spring Boot with Security",
+            "description": "Spring Boot with Security",
+            "endpoint" : "/springbootsecurity"
+        },
+        {
             "id": "watsonsdk",
             "name": "Watson SDK",
             "description": "Adds the Watson SDK dependency to the project, allowing you to integrate Watson services",

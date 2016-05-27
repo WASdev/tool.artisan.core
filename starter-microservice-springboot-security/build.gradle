@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/ 
+apply from: '../common-java.gradle'
+apply from: '../common-war.gradle'
+
+import com.ibm.liberty.starter.gradle.MavenTask
+import com.ibm.liberty.starter.gradle.FvtTask
+
+dependencies {
+    providedCompile group:'javax.ws.rs', name:'javax.ws.rs-api', version: '2.0'
+    providedCompile group:'javax.json', name:'javax.json-api', version:'1.0'
+}
+
+buildutils {
+	contextRoot = '/springbootsecurity'
+}
+
+task installAllPOMs(type: MavenTask) {
+	id 'springbootsecurity'
+	hasProvided true
+	hasRuntime true
+	hasCompile true
+}
+
+task fvt(type: FvtTask) {
+	id 'starter-microservice-springboot-security'
+	finalizedBy libertyStop
+}
+
+apply from: '../tech-type-task-graph.gradle'
