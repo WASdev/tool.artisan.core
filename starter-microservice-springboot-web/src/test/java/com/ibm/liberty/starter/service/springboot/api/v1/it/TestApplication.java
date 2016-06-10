@@ -47,19 +47,19 @@ public class TestApplication extends EndpointTest {
         boolean compileDependency = false;
         for (Dependency dependency : dependencies) {
             if (Dependency.Scope.PROVIDED.equals(dependency.getScope())) {
-                assertTrue("groupId incorrect.", "net.wasdev.wlp.starters.springboot".equals(dependency.getGroupId()));
+                assertTrue("groupId incorrect.", "net.wasdev.wlp.starters.springbootweb".equals(dependency.getGroupId()));
                 assertTrue("artifactId incorrect.", "provided-pom".equals(dependency.getArtifactId()));
                 assertTrue("version incorrect.", "0.0.2".equals(dependency.getVersion()));
                 providedDependency = true;
             }
             if (Dependency.Scope.RUNTIME.equals(dependency.getScope())) {
-                assertTrue("groupId incorrect.", "net.wasdev.wlp.starters.springboot".equals(dependency.getGroupId()));
+                assertTrue("groupId incorrect.", "net.wasdev.wlp.starters.springbootweb".equals(dependency.getGroupId()));
                 assertTrue("artifactId incorrect.", "runtime-pom".equals(dependency.getArtifactId()));
                 assertTrue("version incorrect.", "0.0.2".equals(dependency.getVersion()));
                 runtimeDependency = true;
             }
             if (Dependency.Scope.COMPILE.equals(dependency.getScope())) {
-                assertTrue("groupId incorrect.", "net.wasdev.wlp.starters.springboot".equals(dependency.getGroupId()));
+                assertTrue("groupId incorrect.", "net.wasdev.wlp.starters.springbootweb".equals(dependency.getGroupId()));
                 assertTrue("artifactId incorrect.", "compile-pom".equals(dependency.getArtifactId()));
                 assertTrue("version incorrect.", "0.0.2".equals(dependency.getVersion()));
                 compileDependency = true;

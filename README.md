@@ -25,10 +25,35 @@ For the complete feature documentation, see the <a href="http://www.ibm.com/supp
 This provides you with a SpringBoot application that will run on WebSphere Liberty.
 
 Inside the application project there is a application.springboot.web package containing two classes:
-* SpringBootLibertyApplication</code>: The entry point for the SpringBoot application.
+* Application</code>: The entry point for the SpringBoot application.
 * LibertyHelloController</code>: A Spring MVC endpoint which you can access at /springbootweb.
 
 Inside the wlpcfg project there is the <code>it.springboot.web.HelloControllerTest</code> that will test the Spring MVC endpoint to ensure it is working.
+For the complete feature documentation, see the <a href="http://spring.io/guides/gs/serving-web-content">Serving Web Content with Spring MVC</a>
+
+## Spring Boot with Jersey
+This provides you with a SpringBoot application that will run on WebSphere Liberty.
+
+Inside the application project there is a application.springboot.jersey package containing 3 classes:
+* Application</code>: The entry point for the SpringBoot application.
+* Endpoint</code>: A Jersey endpoint which you can access at /springbootjersey.
+* JerseyConfig</code>: Jersey configuration class.
+
+Inside the wlpcfg project there is the <code>it.springboot.jersey.SampleJerseyApplicationTests</code> that will test the Jersey endpoint to ensure it is working.
+
+For the complete feature documentation, see the <a href="http://spring.io/guides/gs/rest-service/">Building a RESTful Web Service</a>
+
+## Spring Boot with Security
+This provides you with a SpringBoot application that will run on WebSphere Liberty.
+
+Inside the application project there is a application.springboot.security package containing 3 classes:
+* Application</code>: The entry point for the SpringBoot application.
+* MvcConfig</code>: Map each uri to static html resources
+* WebSecurityConfig</code>: Seucirty configuration for Springboot application
+
+Inside the wlpcfg project there is the <code>it.springboot.security.HelloControllerTest</code> that will test the /springbootsecurity endpoint to ensure it is working.
+
+For the complete feature documentation, see the <a href="http://spring.io/guides/gs/securing-web/">Securing a Web Application</a>
 
 ## Websockets
 This provides you with the websocket-1.1 feature.
