@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>WebSocket Stomp Receiving Example</title>
+</head>
+<body>
+  <h1>Welcome to Spring WebSocket!</h1>
+  <p />
+  The text you type in will get sent to the server application using WebSockets.
+  <br />The server application will then send some information about the session and also echo back the same message using WebSockets.
+  <br />Type 'stop' to tell the server application to close down the session.
+  <p />
+  <div>
+    <input id="inputmessage" type="text" />
+  </div>
+  <div>
+    <input type="submit" value="Send Message" onclick="send()" />
+  </div>
+  <div id="messages"></div>
+
+	<script language="javascript" type="text/javascript">
+    var webSocket = 
+      new WebSocket('ws://' + window.document.location.host + '/SimpleWS/webSocketServer');
+
+    webSocket.onerror = function(event) {
+      onError(event)
+    };
+
+    webSocket.onopen = function(event) {
+      onOpen(event)
+    };
+
+    webSocket.onmessage = function(event) {
+      onMessage(event)
+    };
+    
+
+    function onMessage(event) {
+      document.getElementById('messages').innerHTML 
+        += '<br />' + event.data;
+    }
+
+    function onOpen(event) {
+      document.getElementById('messages').innerHTML 
+        = 'Connection established';
+    }
+
+    function onError(event) {
+      alert(event.data);
+    }
+
+    function send() {
+      var txt = document.getElementById('inputmessage').value;
+      webSocket.send(txt);
+      return false;
+    }
+
+    
+    
+  </script>
+</body>
+</html>

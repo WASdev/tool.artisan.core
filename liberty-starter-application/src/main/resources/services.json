@@ -35,6 +35,12 @@
             "name": "Watson SDK",
             "description": "Adds the Watson SDK dependency to the project, allowing you to integrate Watson services",
             "endpoint" : "/watsonsdk"
+        },
+        {
+            "id": "springbootwebsocket",
+            "name": "Spring Boot with WebSocket",
+            "description": "Spring Boot with WebSocket",
+            "endpoint" : "/springbootwebsocket"
         }
     ]
 }
