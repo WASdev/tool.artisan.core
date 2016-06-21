@@ -232,6 +232,21 @@ body {
     padding-bottom: 8px;
 }
 
+#step1TechnologiesContainer .step1TechnologyDisabled {
+    height: 80px;
+    width: 297px;
+    padding-left: 26px;
+    color: #CCCCCC;
+    font-size: 18px;
+    border: solid 1px #BEBEBE;
+    line-height: 80px;
+    display: inline-block;
+    margin-right: 40px;
+    text-decoration: none;
+    margin-bottom: 34px;
+    position: relative;
+}
+
 #step1TechnologiesContainer .step1Technology {
     height: 80px;
     width: 297px;

@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.wasdev.wlp.starters.springbootjdbc</groupId>
+    <artifactId>provided-pom</artifactId>
+    <version>0.0.1</version>
+
+    <name>provided-pom</name>
+    
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://raw.github.com/WASdev/tool.artisan.core/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>scm:git:git@github.com:WASdev/tool.artisan.core.git</connection>
+        <developerConnection>scm:git@github.com:WASdev/tool.artisan.core.git</developerConnection>
+        <url>git@github.com:WASdev/tool.artisan.core.git</url>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>ibm-maven-repo</id>
+            <name>ibm-maven-repo</name>
+            <url>https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/maven/repository/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.websphere.appserver.api</groupId>
+            <artifactId>com.ibm.websphere.appserver.api.servlet</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+    </dependencies>
+
+</project>

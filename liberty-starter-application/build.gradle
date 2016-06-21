@@ -131,7 +131,7 @@ liberty {
 }
 
 clean.dependsOn(':liberty-starter-wlpcfg:cleanServer')
-war.dependsOn(':liberty-filter-application:publishWar', ':starter-microservice-test:publishTestWar', ':starter-microservice-web:publishWar', ':starter-microservice-persistence:publishWar', ':starter-microservice-rest:publishWar', ':starter-microservice-websocket:publishWar', ':starter-microservice-springboot-web:publishWar', ':starter-microservice-watsonsdk:publishWar', 'compressSkeletonBuildImage', 'copySpecialFiles', 'createSwaggerJSON')
+war.dependsOn(':liberty-filter-application:publishWar', ':starter-microservice-test:publishTestWar', ':starter-microservice-web:publishWar', ':starter-microservice-persistence:publishWar', ':starter-microservice-rest:publishWar', ':starter-microservice-websocket:publishWar', ':starter-microservice-springboot-web:publishWar', ':starter-microservice-springboot-jersey:publishWar', ':starter-microservice-springboot-security:publishWar',':starter-microservice-springboot-jdbc:publishWar', ':starter-microservice-watsonsdk:publishWar', 'compressSkeletonBuildImage', 'copySpecialFiles', 'createSwaggerJSON')
 installFeature.dependsOn('installLiberty')
 libertyStart.dependsOn('installFeature', 'addServerEnv', 'publishWar')
 fvt.dependsOn('libertyStart', 'testClasses')

@@ -3,32 +3,50 @@
         {
             "id" : "rest",
             "name" : "REST",
-            "description" : "JAX-RS implementation",
+            "description" : "REST technology allows to create a simple JAX-RS application by using Liberty jaxrs-2.0 feature. \nNotice that REST technology cannot co-exist with Spring Boot with Jersey technology.",
             "endpoint" : "/rest"
         },
         {
             "id" : "websocket",
             "name" : "Web Sockets",
-            "description" : "WebSocket implementation",
+            "description" : "Web Sockets technology allows to create a simple WebSocket application by using Liberty websocket-1.1 feature.",
             "endpoint" : "/websocket"
         },
         {
             "id" : "persistence",
             "name" : "Persistence",
-            "description" : "JPA data persistence",
+            "description" : "Persistence technology allows to create a simple JPA data persistence application by using Liberty jpa-2.1 feature.",
             "endpoint" : "/persistence"
         },
         {
             "id": "web",
             "name" : "Servlet",
-            "description": "Servlet 3.1",
+            "description": "Servlet technology allows to create a simple Servlet 3.1 application by using Liberty servlet-3.1 feature.",
             "endpoint" : "/web"
         },
         {
             "id": "springbootweb",
             "name": "Spring Boot with Spring MVC",
-            "description": "Spring Boot with Spring MVC",
+            "description": "Spring Boot with Spring MVC technology allows to create a hello world web application with SpringBoot MVC.",
             "endpoint" : "/springbootweb"
+        },
+        {
+            "id": "springbootjersey",
+            "name": "Spring Boot with Jersey",
+            "description": "Spring Boot with Jersey technology allows to create a JAX-RS application with SpringBoot Jersey support. \nNotice that Spring Boot with Jersey technology cannot co-exist with REST technology.",
+            "endpoint" : "/springbootjersey"
+        },
+         {
+            "id": "springbootsecurity",
+            "name": "Spring Boot with Security",
+            "description": "Spring Boot with Security technology allows to create a simple web application with resources that are protected by Spring Security.",
+            "endpoint" : "/springbootsecurity"
+        },
+         {
+            "id": "springbootjdbc",
+            "name": "Spring Boot with JDBC",
+            "description": "Spring Boot with JDBC technology allows to create a simple Derby DB and do some SQL operation on it.",
+            "endpoint" : "/springbootjdbc"
         },
         {
             "id": "watsonsdk",

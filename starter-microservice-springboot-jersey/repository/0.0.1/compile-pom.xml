@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.wasdev.wlp.starters.springboot.jersey</groupId>
+    <artifactId>compile-pom</artifactId>
+    <version>0.0.1</version>
+
+    <name>compile-pom</name>
+    
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://raw.github.com/WASdev/tool.artisan.core/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>scm:git:git@github.com:WASdev/tool.artisan.core.git</connection>
+        <developerConnection>scm:git@github.com:WASdev/tool.artisan.core.git</developerConnection>
+        <url>git@github.com:WASdev/tool.artisan.core.git</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-jersey</artifactId>
+           <version>1.3.5.RELEASE</version>
+           <exclusions>
+               <exclusion>
+                   <groupId>org.springframework.boot</groupId>
+                   <artifactId>spring-boot-starter-tomcat</artifactId>
+               </exclusion>
+           </exclusions>
+        </dependency>
+    </dependencies>
+
+</project>
