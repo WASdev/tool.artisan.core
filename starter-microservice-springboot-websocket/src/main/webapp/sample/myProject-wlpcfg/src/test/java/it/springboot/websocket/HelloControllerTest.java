@@ -31,6 +31,6 @@ public class HelloControllerTest extends EndpointTest {
     
     @Test
     public void testDeployment() {
-        testEndpoint("/springbootwebsocket", "Welcome to Spring WebSocket!!");
+        testEndpoint("/springbootwebsocket", "Welcome to Spring WebSocket!");
    	}
 }

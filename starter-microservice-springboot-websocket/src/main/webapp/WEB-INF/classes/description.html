@@ -19,10 +19,11 @@
 	<p>Learn more about IBM WebSphere Liberty, visit <a href="https://developer.ibm.com/wasdev/">https://developer.ibm.com/wasdev/</a></p>
 	<p>Inside the application project there is a application.springboot.websocket package containing three classes:</p>
 	<ul>
-		<li><code>application.springboot.Application</code>: The entry point for the SpringBoot application</li>
-		<li><code>LibertyHelloController</code>: A Spring endpoint which you can access at <a href="springbootwebsocket">/springbootwebsocket</a></li>
-		<li><code>application.springboot.websocket.SystemWebSocketHandler</code>: Creating a WebSocket server by implementing WebSocketHandler</li>
-		<li><code>application.springboot.websocket.WebSocketConfig</code>: The WebSocket config class to map the WebSocket handler at a specific URL</li>
+		<li><code>Application</code>: The entry point for the SpringBoot application</li>
+		<li><code>MvcConfig</code>: Map each uri to static html resources</li>
+		<li><code>SystemWebSocketHandler</code>: Creating a WebSocket server by implementing WebSocketHandler</li>
+		<li><code>WebSocketConfig</code>: The WebSocket config class to map the WebSocket handler at a specific URL</li>
+		<li>View how application work at:<a href="springbootwebsocket">/springbootwebsocket</a></li>
 	</ul>
 	<p>Inside the wlpcfg project there is the <code>it.springboot.security.HelloControllerTest</code> that will test the Spring WebSocket endpoint to ensure it is working.</p>
 </div>
