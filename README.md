@@ -33,15 +33,14 @@ Inside the wlpcfg project there is the <code>it.springboot.web.HelloControllerTe
 ## Spring Boot with WebSocket
 This provides you with a SpringBoot application that will run on WebSphere Liberty.
 
-Inside the application project there is a application.springboot.websocket package containing 4 classes:
-* Application</code>: The entry point for the SpringBoot application.
-* MvcConfig</code>: Map each uri to static html resources
-* SystemWebSocketHandler</code>: Creating a WebSocket server by implementing WebSocketHandler
-* WebSocketConfig</code>: The WebSocket config class to map the WebSocket handler at a specific URL
+Inside the application project there are four classes:
+* application.springboot.Application</code>: The entry point for the SpringBoot application.
+* application.springboot.websocket.MvcConfig</code>: Map each uri to static html resources
+* application.springboot.websocket.SystemWebSocketHandler</code>: Creating a WebSocket server by implementing WebSocketHandler
+* application.springboot.websocket.WebSocketConfig</code>: The WebSocket config class to map the WebSocket handler at a specific URL
 
 Inside the wlpcfg project there is the <code>it.springboot.security.HelloControllerTest</code> that will test the /springbootwebsocket endpoint to ensure it is working.
 
-For the complete feature documentation, see the <a href="http://spring.io/guides/gs/messaging-stomp-websocket/">Using WebSocket to build an interactive web application</a>
 
 ## Websockets
 This provides you with the websocket-1.1 feature.

@@ -17,12 +17,12 @@
 	<h2>Spring Boot with WebSocket</h2>
 	<p>This project demonstrate how to accessing relational data with Spring technology and run on IBM WebSphere Liberty Server</p>
 	<p>Learn more about IBM WebSphere Liberty, visit <a href="https://developer.ibm.com/wasdev/">https://developer.ibm.com/wasdev/</a></p>
-	<p>Inside the application project there is a application.springboot.websocket package containing four classes:</p>
+	<p>Inside the application project there are four classes:</p>
 	<ul>
-		<li><code>Application</code>: The entry point for the SpringBoot application</li>
-		<li><code>MvcConfig</code>: Map each uri to static html resources</li>
-		<li><code>SystemWebSocketHandler</code>: Creating a WebSocket server by implementing WebSocketHandler</li>
-		<li><code>WebSocketConfig</code>: The WebSocket config class to map the WebSocket handler at a specific URL</li>
+		<li><code>application.springboot.Application</code>: The entry point for the SpringBoot application</li>
+		<li><code>application.springboot.websocket.MvcConfig</code>: Map each uri to static html resources</li>
+		<li><code>application.springboot.websocket.SystemWebSocketHandler</code>: Creating a WebSocket server by implementing WebSocketHandler</li>
+		<li><code>application.springboot.websocket.WebSocketConfig</code>: The WebSocket config class to map the WebSocket handler at a specific URL</li>
 		<li>View how application work at:<a href="springbootwebsocket">/springbootwebsocket</a></li>
 	</ul>
 	<p>Inside the wlpcfg project there is the <code>it.springboot.security.HelloControllerTest</code> that will test the Spring WebSocket endpoint to ensure it is working.</p>

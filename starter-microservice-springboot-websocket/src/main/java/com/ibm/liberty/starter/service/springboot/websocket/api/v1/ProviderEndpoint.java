@@ -37,8 +37,6 @@ import com.ibm.liberty.starter.api.v1.model.provider.Tag;
 @Path("v1/provider")
 public class ProviderEndpoint {
     
-    private static final String DEPENDENCY_URL = "http://localhost:9082/springboot/artifacts/net/wasdev/wlp/starters/springboot/websocket";
-
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
