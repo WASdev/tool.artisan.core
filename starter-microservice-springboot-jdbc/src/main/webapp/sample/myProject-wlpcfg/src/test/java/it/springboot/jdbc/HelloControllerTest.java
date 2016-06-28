@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/ 
-package application.springboot.web;
+package it.springboot.jdbc;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
+import static org.junit.Assert.assertTrue;
 
-@SpringBootApplication(exclude = MessageSourceAutoConfiguration.class)
-public class SpringBootLibertyApplication extends SpringBootServletInitializer {
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import it.EndpointTest;
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(SpringBootLibertyApplication.class);
+import org.junit.Test;
+
+public class HelloControllerTest extends EndpointTest {
+
+    
+    @Test
+    public void testDeployment() {
+        testEndpoint("/springbootjdbc", "Welcome to Springboot JDBC running on Liberty!");
     }
-
 }

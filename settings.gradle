@@ -22,4 +22,4 @@ include 'services:webservice'
 */
 
 rootProject.name = 'LibertyUserExperience'
-include 'liberty-starter-wlpcfg', 'liberty-filter-application', 'liberty-starter-application', 'starter-microservice-test', 'starter-microservice-web', 'starter-microservice-persistence', 'starter-microservice-rest', 'starter-microservice-websocket', 'starter-microservice-watsonsdk', 'starter-microservice-springboot-web', 'liberty-starter-model', 'liberty-starter-common'
+include 'liberty-starter-wlpcfg', 'liberty-filter-application', 'liberty-starter-application', 'starter-microservice-test', 'starter-microservice-web', 'starter-microservice-persistence', 'starter-microservice-rest', 'starter-microservice-websocket', 'starter-microservice-watsonsdk', 'starter-microservice-springboot-web', 'starter-microservice-springboot-jersey', 'starter-microservice-springboot-security','starter-microservice-springboot-jdbc', 'liberty-starter-model', 'liberty-starter-common'

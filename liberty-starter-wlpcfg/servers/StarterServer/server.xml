@@ -39,4 +39,8 @@
     <application location="starter-microservice-watsonsdk.war" id="watsonsdk" context-root="/watsonsdk"></application>
     <application location="starter-microservice-websocket.war" id="websocket" context-root="/websocket"></application>
     <application location="starter-microservice-springboot-web.war" id="springbootweb" context-root="/springbootweb"></application>
+    <application location="starter-microservice-springboot-jersey.war" id="springbootjersey" context-root="/springbootjersey"></application>
+    <application location="starter-microservice-springboot-security.war" id="springbootsecurity" context-root="/springbootsecurity"></application>
+    <application location="starter-microservice-springboot-jdbc.war" id="springbootjdbc" context-root="/springbootjdbc"></application>
+   
 </server>

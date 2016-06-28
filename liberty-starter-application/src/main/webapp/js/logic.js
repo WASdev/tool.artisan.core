@@ -26,7 +26,7 @@ $(document).ready(function() {
         step1TechnologiesContainer.empty();
         for(var i = 0; i < technologies.length; i++) {
             var technology = technologies[i];
-            var technologyTag = $("<a href=\"#\" class=\"step1Technology\" data-technologyname=\""+ technology.name +"\" data-technologyid=\"" + technology.id + "\">" + technology.name + "</a>");
+            var technologyTag = $("<a href=\"#\" class=\"step1Technology\" data-technologyname=\""+ technology.name +"\" data-technologyid=\"" + technology.id + "\" title=\"" + technology.description + "\">" + technology.name + "</a>");
             technologyTag.append('<span class="state-checkmark"></span>');
             step1TechnologiesContainer.append(technologyTag);
         }
@@ -108,14 +108,48 @@ $(document).ready(function() {
     var updateStep1Summary = function() {
         var selectedTechnologies = $("#step1TechnologiesContainer .step1Technology.selected");
         var selectedTechnologiesText = "";
+		var restSelected = false;
+		var springbootjerseySelected = false;
         for(var i = 0; i < selectedTechnologies.size(); i++) {
             selectedTechnologiesText += selectedTechnologies.get(i).dataset.technologyname;
             if(i + 1 < selectedTechnologies.size()) {
                 selectedTechnologiesText += ", ";
             }
+			
+			if(selectedTechnologies.get(i).dataset.technologyid == "rest"){	
+				restSelected = true;
+			}
+			if(selectedTechnologies.get(i).dataset.technologyid == "springbootjersey"){	
+				springbootjerseySelected = true;
+			}
         }
         $("#navigationTop1 .variableContent").text(selectedTechnologiesText);
+		
+		updateStep1Conflict(restSelected, "springbootjersey");
+		updateStep1Conflict(springbootjerseySelected, "rest");
     };
+	
+	var updateStep1Conflict = function(selected, id) {
+		if(selected){			
+			var enabledTechnologies = $("#step1TechnologiesContainer .step1Technology");	
+			for(var i = 0; i < enabledTechnologies.size(); i++) {
+				var technology = enabledTechnologies[i];
+				if(technology.dataset.technologyid == id){
+					technology.className = "step1TechnologyDisabled";
+					break; 
+				}
+			}
+		} else {
+			var disabledTechnologies = $("#step1TechnologiesContainer .step1TechnologyDisabled");
+			for(var i = 0; i < disabledTechnologies.size(); i++) {
+				var technology = disabledTechnologies[i];
+				if(technology.dataset.technologyid == id){
+					technology.className = "step1Technology";
+					break; 
+				}
+			}
+		}
+	};
 
     var refreshSectionVisibility = function() {
         var currentlyVisibleSections = $(".step:not(.hidden)").size();
