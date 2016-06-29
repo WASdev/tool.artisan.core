@@ -30,6 +30,18 @@ Inside the application project there is a application.springboot.web package con
 
 Inside the wlpcfg project there is the <code>it.springboot.web.HelloControllerTest</code> that will test the Spring MVC endpoint to ensure it is working.
 
+## Spring Boot with WebSocket
+This provides you with a SpringBoot application that will run on WebSphere Liberty.
+
+Inside the application project there are four classes:
+* application.springboot.Application</code>: The entry point for the SpringBoot application.
+* application.springboot.websocket.MvcConfig</code>: Map each uri to static html resources
+* application.springboot.websocket.SystemWebSocketHandler</code>: Creating a WebSocket server by implementing WebSocketHandler
+* application.springboot.websocket.WebSocketConfig</code>: The WebSocket config class to map the WebSocket handler at a specific URL
+
+Inside the wlpcfg project there is the <code>it.springboot.security.HelloControllerTest</code> that will test the /springbootwebsocket endpoint to ensure it is working.
+
+
 ## Websockets
 This provides you with the websocket-1.1 feature.
 
