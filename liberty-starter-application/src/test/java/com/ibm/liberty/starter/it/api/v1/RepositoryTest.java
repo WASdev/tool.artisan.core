@@ -105,11 +105,15 @@ public class RepositoryTest {
         String url = "http://localhost:" + port + "/start/api/v1/repo/" + file;
         System.out.println("Testing " + url);
         Response response = client.target(url).request().get();
-        int responseStatus = response.getStatus();
-        InputStream responseStream = response.readEntity(InputStream.class);
-        String output = inputStreamToString(responseStream);
-        assertTrue("Response status is: " + responseStatus + " Response message: " + output, responseStatus == expectedStatus);
-        return output;
+        try {
+            int responseStatus = response.getStatus();
+            InputStream responseStream = response.readEntity(InputStream.class);
+            String output = inputStreamToString(responseStream);
+            assertTrue("Response status is: " + responseStatus + " Response message: " + output, responseStatus == expectedStatus);
+            return output;
+        } finally {
+            response.close();
+        }
     }
     
     private String inputStreamToString(InputStream inputStream) throws IOException {

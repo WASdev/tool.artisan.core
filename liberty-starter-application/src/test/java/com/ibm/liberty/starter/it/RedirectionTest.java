@@ -27,46 +27,58 @@ import org.junit.Test;
 
 public class RedirectionTest {
 
-    
+
     @Test
     public void testStartSlashContextRoot() throws Exception {
         String queryString = "/start/";
         Response response = getResponse(queryString);
         assertEquals(200, response.getStatus());
     }
-    
+
     @Test
     public void testStartContextRoot() throws Exception {
         String queryString = "/start";
         Response response = getResponse(queryString);
-        assertEquals(302, response.getStatus());
-        MultivaluedMap<String, Object> headers = response.getHeaders();
-        String location = headers.get("Location").toString();
-        String port = System.getProperty("liberty.test.port");
-        String expectedLocation = "http://localhost:" + port + "/start/";
-        assertTrue("Location should be /start/, instead got " + location, location.equals("["+ expectedLocation + "]"));
+        try {
+            assertEquals(302, response.getStatus());
+            MultivaluedMap<String, Object> headers = response.getHeaders();
+            String location = headers.get("Location").toString();
+            String port = System.getProperty("liberty.test.port");
+            String expectedLocation = "http://localhost:" + port + "/start/";
+            assertTrue("Location should be /start/, instead got " + location, location.equals("[" + expectedLocation + "]"));
+        } finally {
+            response.close();
+        }
     }
-    
+
     @Test
     public void testSlashContextRoot() throws Exception {
         String queryString = "";
         Response response = getResponse(queryString);
-        assertEquals(301, response.getStatus());
-        MultivaluedMap<String, Object> headers = response.getHeaders();
-        String location = headers.get("Location").toString();
-        assertTrue("Location should be /start, instead got " + location, location.equals("[/start/]"));
+        try {
+            assertEquals(301, response.getStatus());
+            MultivaluedMap<String, Object> headers = response.getHeaders();
+            String location = headers.get("Location").toString();
+            assertTrue("Location should be /start, instead got " + location, location.equals("[/start/]"));
+        } finally {
+            response.close();
+        }
     }
-    
+
     @Test
     public void testCheeseContextRoot() throws Exception {
         String queryString = "/cheese";
         Response response = getResponse(queryString);
-        assertEquals(301, response.getStatus());
-        MultivaluedMap<String, Object> headers = response.getHeaders();
-        String location = headers.get("Location").toString();
-        assertTrue("Location should be /start, instead got " + location, location.equals("[/start/]"));
+        try {
+            assertEquals(301, response.getStatus());
+            MultivaluedMap<String, Object> headers = response.getHeaders();
+            String location = headers.get("Location").toString();
+            assertTrue("Location should be /start, instead got " + location, location.equals("[/start/]"));
+        } finally {
+            response.close();
+        }
     }
-    
+
     private Response getResponse(String queryString) {
         Client client = ClientBuilder.newClient();
         String port = System.getProperty("liberty.test.port");
@@ -75,5 +87,5 @@ public class RedirectionTest {
         Response getResponse = client.target(url).request("text/html").get();
         return getResponse;
     }
-    
+
 }

@@ -39,6 +39,7 @@ public class EndpointInputValidationTest {
         String endpoint = "/start/api/v1/services";
         Response response = callEndpoint(endpoint);
         int status = response.getStatus();
+        response.close();
         assertTrue("Response incorrect, response status was " + status, status == 200);
     }
 
@@ -47,6 +48,7 @@ public class EndpointInputValidationTest {
         String endpoint = "/start/api/v1/tech/ABC123";
         Response response = callEndpoint(endpoint);
         int status = response.getStatus();
+        response.close();
         assertTrue("Response incorrect, response status was " + status, status == Response.Status.BAD_REQUEST.getStatusCode());
     }
 
@@ -55,6 +57,7 @@ public class EndpointInputValidationTest {
         String endpoint = "/start/api/v1/data?tech=ABC123&deploy=local";
         Response response = callEndpoint(endpoint);
         int status = response.getStatus();
+        response.close();
         assertTrue("Response incorrect, response status was " + status, status == Response.Status.BAD_REQUEST.getStatusCode());
     }
 
@@ -63,6 +66,7 @@ public class EndpointInputValidationTest {
         String endpoint = "/start/api/v1/data?tech=test&name=testName&deploy=local";
         Response response = callEndpoint(endpoint);
         int status = response.getStatus();
+        response.close();
         assertTrue("Response incorrect, response status was " + status, status == 200);
     }
 
@@ -71,6 +75,7 @@ public class EndpointInputValidationTest {
         String endpoint = "/start/api/v1/data?tech=test&name=in/valid&deploy=local";
         Response response = callEndpoint(endpoint);
         int status = response.getStatus();
+        response.close();
         assertTrue("Response incorrect, response status was " + status, status == Response.Status.BAD_REQUEST.getStatusCode());
     }
 
@@ -79,6 +84,7 @@ public class EndpointInputValidationTest {
         String url = "/start/api/v1/repo/net/wasdev/wlp/starters/abc123/provided-pom/0.0.1/provided-pom-0.0.1.pom";
         Response response = callEndpoint(url);
         int status = response.getStatus();
+        response.close();
         assertTrue("Response incorrect, response status was " + status, status == Response.Status.BAD_REQUEST.getStatusCode());
     }
 
@@ -87,6 +93,7 @@ public class EndpointInputValidationTest {
         String url = "/start/api/v1/repo/net/wasdev/wlp/starters/test/&=";
         Response response = callEndpoint(url);
         int status = response.getStatus();
+        response.close();
         assertTrue("Response incorrect, response status was " + status, status == Response.Status.BAD_REQUEST.getStatusCode());
     }
 
@@ -103,10 +110,14 @@ public class EndpointInputValidationTest {
     public void testStarterWorkspaceEndpoint() throws Exception {
         String endpoint = "/start/api/v1/workspace";
         Response response = callEndpoint(endpoint);
-        int status = response.getStatus();
+        try {
+            int status = response.getStatus();
         assertEquals("Response incorrect, response status was " + status, 200, status);
         String workspaceId = response.readEntity(String.class);
         assertNotNull("Returned workspace ID was not a valid UUID : " + workspaceId, UUID.fromString(workspaceId));
+        } finally {
+            response.close();
+        }
     }
     
     @Test
@@ -150,67 +161,71 @@ public class EndpointInputValidationTest {
         String url = "http://localhost:" + port + "/start/api/v1/data?tech=test&name=Test&deploy=local&techoptions=test:testoption1&workspace=" + uuid;
         System.out.println("Testing " + url);
         Response response = client.target(url).request("application/zip").get();
-        int responseStatus = response.getStatus();
-        assertEquals("Incorrect response code. Response status is: " + responseStatus, 200, responseStatus);
-        // Read the response into an InputStream
-        InputStream entityInputStream = response.readEntity(InputStream.class);
-        // Create a new ZipInputStream from the response InputStream
-        ZipInputStream zipIn = new ZipInputStream(entityInputStream);
-        ZipEntry inputEntry = null;
-        boolean packagedFileExists = false;
-        boolean deletedFileExists = false;
-        boolean foundFeaturesToInstall = false;
-        while ((inputEntry = zipIn.getNextEntry()) != null) {
-            String entryName = inputEntry.getName();
-            if ("sampleUpload3.txt_renamed".equals(entryName)) {
-            	packagedFileExists = true;
-            } else if ("sampleUpload.txt".equals(entryName) || "sampleUpload2.txt".equals(entryName) || "sampleUpload3.txt".equals(entryName)) {
-            	deletedFileExists = true;
-            } else if ("pom.xml".equals(entryName)) {
-            	DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = domFactory.newDocumentBuilder();
-                // Use an annonomous inner class to delegate to the zip input stream as db.parse closes the stream
-                Document doc = db.parse(new InputStream() {
+        try {
+            int responseStatus = response.getStatus();
+            assertEquals("Incorrect response code. Response status is: " + responseStatus, 200, responseStatus);
+            // Read the response into an InputStream
+            InputStream entityInputStream = response.readEntity(InputStream.class);
+            // Create a new ZipInputStream from the response InputStream
+            ZipInputStream zipIn = new ZipInputStream(entityInputStream);
+            ZipEntry inputEntry = null;
+            boolean packagedFileExists = false;
+            boolean deletedFileExists = false;
+            boolean foundFeaturesToInstall = false;
+            while ((inputEntry = zipIn.getNextEntry()) != null) {
+                String entryName = inputEntry.getName();
+                if ("sampleUpload3.txt_renamed".equals(entryName)) {
+                    packagedFileExists = true;
+                } else if ("sampleUpload.txt".equals(entryName) || "sampleUpload2.txt".equals(entryName) || "sampleUpload3.txt".equals(entryName)) {
+                    deletedFileExists = true;
+                } else if ("pom.xml".equals(entryName)) {
+                    DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = domFactory.newDocumentBuilder();
+                    // Use an annonomous inner class to delegate to the zip input stream as db.parse closes the stream
+                    Document doc = db.parse(new InputStream() {
 
-                    @Override
-                    public int read() throws IOException {
-                        return zipIn.read();
-                    }
-                    
-                });
-                Node assemblyInstallDirectory = doc.getElementsByTagName("assemblyInstallDirectory").item(0);
-                assertNotNull("assemblyInstallDirectory node was not found within pom.xml", assemblyInstallDirectory);
-                Node configuration = assemblyInstallDirectory.getParentNode();
-                Node features =  getChildNode(configuration, "features");
-                assertNotNull("features node was not found within pom.xml", features);
-                assertTrue("Install feature was not found : servlet-3.1", hasChildNode(features, "feature", "servlet-3.1"));
-                assertTrue("Install feature was not found : apiDiscovery-1.0", hasChildNode(features, "feature", "apiDiscovery-1.0"));
-                assertTrue("acceptLicense node with ${accept.features.license} property was not found", hasChildNode(features, "acceptLicense", "${accept.features.license}"));
+                        @Override
+                        public int read() throws IOException {
+                            return zipIn.read();
+                        }
 
-                Node plugins = configuration.getParentNode().getParentNode();
-                Node artifactIdNode = getGrandchildNode(plugins, "plugin", "artifactId", "maven-enforcer-plugin");
-                assertNotNull("maven-enforcer-plugin was not found", artifactIdNode);
-                Node enforcerPlugin = artifactIdNode.getParentNode();
-                Node executions = getChildNode(enforcerPlugin, "executions");
-                assertNotNull("executions node was not found within maven-enforcer-plugin", executions);
-                Node enforcePropertyNode =  getGrandchildNode(executions, "execution", "id", "enforce-property");
-                assertNotNull("enforce-property id was not found within maven-enforcer-plugin", enforcePropertyNode);
-                Node execution = enforcePropertyNode.getParentNode();
-                Node configurationNode = getChildNode(execution, "configuration");
-                assertNotNull("configuration node was not found within maven-enforcer-plugin", configurationNode);
-                Node rules = getChildNode(configurationNode, "rules");
-                assertNotNull("rules node was not found within maven-enforcer-plugin", rules);
-                Node acceptLicenseProperty = getGrandchildNode(rules, "requireProperty", "property", "accept.features.license");
-                assertNotNull("requireProperty with accept.features.license property was not found within maven-enforcer-plugin", acceptLicenseProperty);
-                foundFeaturesToInstall = true;
+                    });
+                    Node assemblyInstallDirectory = doc.getElementsByTagName("assemblyInstallDirectory").item(0);
+                    assertNotNull("assemblyInstallDirectory node was not found within pom.xml", assemblyInstallDirectory);
+                    Node configuration = assemblyInstallDirectory.getParentNode();
+                    Node features = getChildNode(configuration, "features");
+                    assertNotNull("features node was not found within pom.xml", features);
+                    assertTrue("Install feature was not found : servlet-3.1", hasChildNode(features, "feature", "servlet-3.1"));
+                    assertTrue("Install feature was not found : apiDiscovery-1.0", hasChildNode(features, "feature", "apiDiscovery-1.0"));
+                    assertTrue("acceptLicense node with ${accept.features.license} property was not found", hasChildNode(features, "acceptLicense", "${accept.features.license}"));
+
+                    Node plugins = configuration.getParentNode().getParentNode();
+                    Node artifactIdNode = getGrandchildNode(plugins, "plugin", "artifactId", "maven-enforcer-plugin");
+                    assertNotNull("maven-enforcer-plugin was not found", artifactIdNode);
+                    Node enforcerPlugin = artifactIdNode.getParentNode();
+                    Node executions = getChildNode(enforcerPlugin, "executions");
+                    assertNotNull("executions node was not found within maven-enforcer-plugin", executions);
+                    Node enforcePropertyNode = getGrandchildNode(executions, "execution", "id", "enforce-property");
+                    assertNotNull("enforce-property id was not found within maven-enforcer-plugin", enforcePropertyNode);
+                    Node execution = enforcePropertyNode.getParentNode();
+                    Node configurationNode = getChildNode(execution, "configuration");
+                    assertNotNull("configuration node was not found within maven-enforcer-plugin", configurationNode);
+                    Node rules = getChildNode(configurationNode, "rules");
+                    assertNotNull("rules node was not found within maven-enforcer-plugin", rules);
+                    Node acceptLicenseProperty = getGrandchildNode(rules, "requireProperty", "property", "accept.features.license");
+                    assertNotNull("requireProperty with accept.features.license property was not found within maven-enforcer-plugin", acceptLicenseProperty);
+                    foundFeaturesToInstall = true;
+                }
+                zipIn.closeEntry();
             }
-            zipIn.closeEntry();
+            zipIn.close();
+
+            assertTrue("Packaged file doesn't exist at sampleUpload3.txt_renamed in the zip file", packagedFileExists);
+            assertTrue("Features to install were not found in pom.xml from the zip file", foundFeaturesToInstall);
+            assertFalse("Deleted file exists in the zip file", deletedFileExists);
+        } finally {
+            response.close();
         }
-        zipIn.close();
-        
-        assertTrue("Packaged file doesn't exist at sampleUpload3.txt_renamed in the zip file", packagedFileExists);
-        assertTrue("Features to install were not found in pom.xml from the zip file", foundFeaturesToInstall);
-        assertFalse("Deleted file exists in the zip file", deletedFileExists);
     }
     
     private boolean hasChildNode(Node parentNode, String nodeName, String nodeValue){

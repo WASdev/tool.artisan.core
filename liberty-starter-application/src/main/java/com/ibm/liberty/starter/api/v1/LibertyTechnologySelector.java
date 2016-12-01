@@ -43,6 +43,7 @@ import com.ibm.liberty.starter.ProjectZipConstructor;
 import com.ibm.liberty.starter.ServiceConnector;
 import com.ibm.liberty.starter.PatternValidation.PatternType;
 import com.ibm.liberty.starter.ProjectZipConstructor.DeployType;
+import com.ibm.liberty.starter.ProjectZipConstructor.BuildType;
 import com.ibm.liberty.starter.api.v1.model.internal.Services;
 import com.ibm.liberty.starter.api.v1.model.registration.Service;
 
@@ -54,7 +55,7 @@ public class LibertyTechnologySelector {
     @GET
     @Produces("application/zip")
     public Response getResponse(@QueryParam("tech") String[] techs, @QueryParam("techoptions") String[] techOptions, @QueryParam("name") String name,
-                                @QueryParam("deploy") final String deploy, @QueryParam("workspace") final String workspaceId, @Context UriInfo info) throws NullPointerException, IOException {
+                                @QueryParam("deploy") final String deploy, @QueryParam("workspace") final String workspaceId, @QueryParam("build") final String build, @Context UriInfo info) throws NullPointerException, IOException {
         log.info("GET request for /data");
         try {
             final ServiceConnector serviceConnector = new ServiceConnector(info.getBaseUri());
@@ -92,13 +93,20 @@ public class LibertyTechnologySelector {
                 throw new ValidationException();
             }
             final DeployType deployType = DeployType.valueOf(deploy.toUpperCase());
+            BuildType buildType;
+            try {
+                buildType = BuildType.valueOf(build.toUpperCase());
+            } catch (Exception e) {
+                buildType = BuildType.MAVEN;
+            }
 
             final String appName = name;
 
+            final BuildType finalBuildType = buildType;
             StreamingOutput so = (OutputStream os) -> {
                 Services services = new Services();
                 services.setServices(serviceList);
-                ProjectZipConstructor projectZipConstructor = new ProjectZipConstructor(serviceConnector, services, appName, deployType, StarterUtil.getWorkspaceDir(workspaceId));
+                ProjectZipConstructor projectZipConstructor = new ProjectZipConstructor(serviceConnector, services, appName, deployType, finalBuildType, StarterUtil.getWorkspaceDir(workspaceId));
                 try {
                     projectZipConstructor.buildZip(os);
                 } catch (SAXException | ParserConfigurationException | TransformerException e) {

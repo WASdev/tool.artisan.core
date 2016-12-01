@@ -76,6 +76,15 @@ public class MockDependencyHandler extends DependencyHandler {
         DependencyHandler depHand = new DependencyHandler(getServices(), serviceConnector, null);
         return depHand;
     }
+
+    public static DependencyHandler getCompileInstance() throws URISyntaxException {
+        URI uri = new URI("");
+        Dependency[] dependencies = new Dependency[1];
+        dependencies[0] = createDependency(Scope.COMPILE);
+        MockServiceConnector serviceConnector = new MockServiceConnector(uri, dependencies);
+        DependencyHandler depHand = new DependencyHandler(getServices(), serviceConnector, null);
+        return depHand;
+    }
     
     public static DependencyHandler getProvidedDuplicateInstance() throws URISyntaxException {
         URI uri = new URI("");

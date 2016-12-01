@@ -1,0 +1,201 @@
+group = 'myParentGroupId'
+version = '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.wasdev.wlp.gradle.plugins:liberty-gradle-plugin:1.0'
+        classpath files('gradle/wlp-anttasks.jar')
+        classpath 'org.cloudfoundry:cf-gradle-plugin:1.1.2'
+    }
+}
+
+apply plugin: 'war'
+apply plugin: 'liberty'
+apply plugin: 'cloudfoundry'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options.encoding = 'UTF-8'
+
+ext {
+    // Liberty server properties
+    wlpServerName = 'LibertyProjectServer'
+    serverDirectory = "${buildDir}/wlp/usr/servers/${wlpServerName}"
+    testServerHttpPort = 9080
+    testServerHttpsPort = 9443
+
+    // This is set in the ibm-web-ext.xml file
+    warContext = 'myLibertyApp'
+    appName = '%APP_NAME%'
+    packageFile = "${project.buildDir}/${appName}.zip"
+    packagingType = 'usr'
+
+    // Cloud Foundry/Bluemix properties
+    // This is the host for your app in Bluemix and what it will be called in the dashboard. -->
+    cfHost = appName
+    cfContext = 'ng.mybluemix.net'
+    cfTarget = 'https://api.ng.bluemix.net'
+    cfSpace = 'dev'
+    cfContextRoot = "${cfHost}.${cfContext}/${warContext}"
+
+    // The Cloud Foundry or Bluemix organization, username and password can be entered here.
+    // cfOrg = ''
+    // cfUsername = ''
+    // cfPassword = ''
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'liberty-starter-maven-repo'
+        url '%REPOSITORY_URL%'
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.apache.cxf:cxf-rt-rs-client:3.1.1'
+    testCompile 'org.glassfish:javax.json:1.0.4'
+
+%DEPENDENCIES%
+}
+
+test {
+    reports.html.destination = file("$buildDir/reports/unit")
+    reports.junitXml.destination = file("$buildDir/test-results/unit")
+    exclude '**/it/**'
+}
+
+task integrationTest(type: Test) {
+    group 'Verification'
+    description 'Runs the integration tests.'
+    reports.html.destination = file("$buildDir/reports/it")
+    reports.junitXml.destination = file("$buildDir/test-results/it")
+    include '**/it/**'
+    exclude '**/unit/**'
+
+    systemProperties = ['liberty.test.port': testServerHttpPort, 'war.name': warContext, 'running.bluemix': 'false', 'cf.context.root': cfContextRoot ]
+}
+
+task copyConfigSnippetsToServer {
+    doLast {
+        def serverSnippetCopySpecs = []
+        configurations.runtime.resolvedConfiguration.getFirstLevelModuleDependencies().each {
+            addServerSnippetDependencies(it, serverSnippetCopySpecs)
+        }
+        copy {
+            into "${serverDirectory}/configDropins/defaults"
+            with serverSnippetCopySpecs.toArray(new CopySpec[serverSnippetCopySpecs.size()])
+        }
+    }
+}
+
+def addServerSnippetDependencies(resolvedDependency, copySpecs) {
+    if ("server-snippet".equals(resolvedDependency.getModuleName())) {
+        resolvedDependency.getModuleArtifacts().each { artifact ->
+            copySpecs.add(copySpec {
+                from artifact.getFile()
+                rename { String fileName ->
+                    resolvedDependency.getModuleGroup() + fileName
+                }
+            })
+        }
+    }
+    resolvedDependency.getChildren().each {
+        addServerSnippetDependencies(it, copySpecs)
+    }
+}
+
+task publishServerConfig(type: Copy) {
+    from 'src/main/liberty/config/server.xml'
+    into serverDirectory
+}
+
+task publishWar(type: Copy) {
+    from(war)
+    into("${serverDirectory}/dropins")
+}
+
+task createServerBootstrap() {
+    outputs.file("${serverDirectory}/bootstrap.properties")
+    doLast {
+        def bootstrapProperties = file("${serverDirectory}/bootstrap.properties")
+        if (!bootstrapProperties.exists()) {
+            bootstrapProperties << "default.http.port=${testServerHttpPort}\ndefault.https.port=${testServerHttpsPort}"
+        }
+    }
+}
+
+liberty {
+    install {
+        runtimeUrl = "http://repo1.maven.org/maven2/com/ibm/websphere/appserver/runtime/wlp-webProfile7/16.0.0.3/wlp-webProfile7-16.0.0.3.zip"
+    }
+    serverName = wlpServerName
+    packageLiberty {
+        archive = packageFile
+        include = packagingType
+    }
+%LIBERTY_FEATURE_CONFIG%
+}
+
+task libertyStartTestServer(type: net.wasdev.wlp.gradle.plugins.tasks.StartTask){
+    description 'Starts the WebSphere Liberty Profile server for testing.'
+    logging.level = LogLevel.INFO
+}
+
+task checkBluemixPropertiesSet() {
+    doLast {
+        checkPropertySet('cfOrg')
+        checkPropertySet('cfUsername')
+        checkPropertySet('cfPassword')
+    }
+}
+
+task printBluemixProperties(dependsOn: 'checkBluemixPropertiesSet') {
+    doLast {
+        println "Running bluemix profile with the following properties:\n" +
+                "\tcf.target=${cfTarget}\n" +
+                "\tcf.space=${cfSpace}\n" +
+                "\tcf.org=${cfOrg}\n" +
+                "\tcf.username=${cfUsername}\n" +
+                "The application will be accessed at context root ${cfContextRoot}"
+    }
+}
+
+def checkPropertySet(propertyName) {
+    if (!project.hasProperty(propertyName)) {
+        throw new GradleException("The ${propertyName} property must be provided to run the cfPush task, this can be supplied on the command line with -P${propertyName}=<value>.")
+    }
+}
+
+cloudfoundry {
+    target = cfTarget
+    if (project.hasProperty('cfOrg')) {
+        organization = cfOrg
+    }
+    space = cfSpace
+    file = file(packageFile)
+    memory = 512
+    appName = cfHost
+}
+
+tasks.create('setupServer')
+check.dependsOn 'integrationTest'
+%LIBERTY_FEATURE_TASK_SETUP%
+setupServer.dependsOn 'createServerBootstrap', 'publishServerConfig', 'copyConfigSnippetsToServer', 'publishWar'
+createServerBootstrap.mustRunAfter 'installLiberty'
+publishServerConfig.mustRunAfter 'installLiberty'
+copyConfigSnippetsToServer.mustRunAfter 'installLiberty'
+publishWar.mustRunAfter 'installLiberty'
+publishWar.dependsOn 'war'
+libertyStart.dependsOn 'setupServer'
+integrationTest.dependsOn 'libertyStartTestServer', 'testClasses'
+integrationTest.finalizedBy 'libertyStop'
+libertyStartTestServer.dependsOn 'setupServer'
+assemble.dependsOn 'libertyPackage'
+libertyPackage.dependsOn 'setupServer'
+cfPush.dependsOn 'printBluemixProperties'

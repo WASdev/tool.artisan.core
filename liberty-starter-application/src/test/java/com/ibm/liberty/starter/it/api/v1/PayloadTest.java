@@ -121,34 +121,38 @@ public class PayloadTest {
         String url = "http://localhost:" + port + "/start/api/v1/data?tech=test&name=Test&deploy=local";
         System.out.println("Testing " + url);
         Response response = client.target(url).request("application/zip").get();
-        responseStatus = response.getStatus();
-        contentDisposition = response.getHeaders().get("Content-Disposition");
-        assertTrue("Response status is: " + responseStatus, this.responseStatus == 200);
-        // Read the response into an InputStream
-        InputStream entityInputStream = response.readEntity(InputStream.class);
-        // Create a new ZipInputStream from the response InputStream
-        ZipInputStream zipIn = new ZipInputStream(entityInputStream);
-        // This system property is being set in the liberty-starter-application/build.gradle file
-        String tempDir = System.getProperty("liberty.temp.dir");
-        File file = new File(tempDir + "/LibertyProject.zip");
-        System.out.println("Creating zip file: " + file.toString());
-        file.getParentFile().mkdirs();
-        ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(file));
-        ZipEntry inputEntry = null;
-        boolean pomExists = false;
-        while ((inputEntry = zipIn.getNextEntry()) != null) {
-            String entryName = inputEntry.getName();
-            zipOut.putNextEntry(new ZipEntry(entryName));
-            if ("pom.xml".equals(entryName)) {
-                pomExists = true;
+        try {
+            responseStatus = response.getStatus();
+            contentDisposition = response.getHeaders().get("Content-Disposition");
+            assertTrue("Response status is: " + responseStatus, this.responseStatus == 200);
+            // Read the response into an InputStream
+            InputStream entityInputStream = response.readEntity(InputStream.class);
+            // Create a new ZipInputStream from the response InputStream
+            ZipInputStream zipIn = new ZipInputStream(entityInputStream);
+            // This system property is being set in the liberty-starter-application/build.gradle file
+            String tempDir = System.getProperty("liberty.temp.dir");
+            File file = new File(tempDir + "/LibertyProject.zip");
+            System.out.println("Creating zip file: " + file.toString());
+            file.getParentFile().mkdirs();
+            ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(file));
+            ZipEntry inputEntry = null;
+            boolean pomExists = false;
+            while ((inputEntry = zipIn.getNextEntry()) != null) {
+                String entryName = inputEntry.getName();
+                zipOut.putNextEntry(new ZipEntry(entryName));
+                if ("pom.xml".equals(entryName)) {
+                    pomExists = true;
+                }
             }
+            zipOut.flush();
+            zipIn.close();
+            zipOut.close();
+            System.out.println("Deleting file:" + file.toPath());
+            Files.delete(file.toPath());
+            assertTrue(pomExists);
+        } finally {
+            response.close();
         }
-        zipOut.flush();
-        zipIn.close();
-        zipOut.close();
-        System.out.println("Deleting file:" + file.toPath());
-        Files.delete(file.toPath());
-        assertTrue(pomExists);
     }
 
     private void callDataEndpoint(String queryString) throws Exception {
@@ -157,15 +161,19 @@ public class PayloadTest {
         String url = "http://localhost:" + port + "/start/api/v1/data?" + queryString;
         System.out.println("Testing " + url);
         Response response = client.target(url).request("application/zip").get();
-        responseStatus = response.getStatus();
-        contentDisposition = response.getHeaders().get("Content-Disposition");
-        if (this.responseStatus != 200) {
-            Assert.fail("Expected response status 200, instead found " + responseStatus + ". Response was " + response.readEntity(String.class));
+        try {
+            responseStatus = response.getStatus();
+            contentDisposition = response.getHeaders().get("Content-Disposition");
+            if (this.responseStatus != 200) {
+                Assert.fail("Expected response status 200, instead found " + responseStatus + ". Response was " + response.readEntity(String.class));
+            }
+            parseResponse(response);
+            System.out.println("Content disposition: " + contentDisposition);
+            System.out.println("Groups: " + groups);
+            System.out.println("Artifacts: " + artifacts);
+        } finally {
+            response.close();
         }
-        parseResponse(response);
-        System.out.println("Content disposition: " + contentDisposition);
-        System.out.println("Groups: " + groups);
-        System.out.println("Artifacts: " + artifacts);
 
     }
 

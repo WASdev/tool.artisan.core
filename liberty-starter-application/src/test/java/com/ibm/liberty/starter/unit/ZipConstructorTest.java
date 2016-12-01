@@ -35,7 +35,7 @@ public class ZipConstructorTest {
     @Test
     public void testMapInitializer() throws IOException {
         Services services = new Services();
-        ProjectZipConstructor zipConstructor = new ProjectZipConstructor(null, services, null, null);
+        ProjectZipConstructor zipConstructor = new ProjectZipConstructor(null, services, null, null, null, null);
         zipConstructor.initializeMap();
         Map<String, byte[]> map = zipConstructor.getFileMap();
         assertThat(map, is(not(anEmptyMap())));

@@ -67,7 +67,7 @@ libertyutils {
 }
 
 // Zip up the skeletonBuildImage so it can be included in the war file
-task compressSkeletonBuildImage(type: Jar) {
+task compressSkeletonBuildImage(type: Zip) {
     from 'skeletons/base'
     destinationDir = sourceSets.main.output.resourcesDir
     baseName = '/services/skeletonLibertyBuildImage'
@@ -95,8 +95,14 @@ task fvt(type: Test) {
     include '**/it/**'
     exclude '**/unit/**'
 
-    systemProperties = ['liberty.test.port': "${libertyApplicationTestPort}", 'liberty.temp.dir': "${buildDir}/temp" ]
-  
+    systemProperties = ['liberty.test.port': "${libertyApplicationTestPort}", 'liberty.temp.dir': "${buildDir}/temp", 'gradleCommand': rootProject.file('gradlew').getAbsolutePath() ]
+
+    testLogging {
+        events "started", "skipped", "failed"
+        showStackTraces true
+        showStandardStreams true
+        exceptionFormat "full"
+    }
 }
 
 test {
@@ -135,6 +141,42 @@ liberty {
 task localRun (type: net.wasdev.wlp.gradle.plugins.tasks.StartTask){
     description 'Starts the WebSphere Liberty Profile server without the test WAR.'
     logging.level = LogLevel.INFO
+}
+
+gradle.taskGraph.afterTask { Task task, TaskState state ->
+    if (task.name == "fvt" && state.failure) {
+        println '***FVT JUNIT LOGS***'
+        printDirectory(task.reports.junitXml.destination)
+        println '***FVT JUNIT LOGS END***'
+        println '***SERVER LOGS***'
+        printDirectory(file('../liberty-starter-wlpcfg/servers/StarterServer/logs'))
+        println '***SERVER LOGS END***'
+        printFile(file("${buildDir}/temp/localGradlePayloadTest/gradleLog/log.txt"))
+        printFile(file("${buildDir}/temp/localPayloadTest/mvnLog/log.txt"))
+        printFile(file("${buildDir}/temp/localPayloadTest/mvnLog/stopServer.txt"))
+    }
+}
+
+def printDirectory(dir) {
+    if (dir.exists()) {
+        dir.eachFile {child ->
+            if (child.isDirectory()) {
+                printDirectory(child)
+            } else {
+                printFile(child)
+            }
+        }
+    }
+}
+
+def printFile(file) {
+    println "***PRINTING FILE: ${file.getAbsolutePath()}"
+    if (file.exists()) {
+        println file.text
+    } else {
+        println 'File does not exist'
+    }
+    println '***END OF FILE'
 }
 
 clean.dependsOn(':liberty-starter-wlpcfg:cleanServer')

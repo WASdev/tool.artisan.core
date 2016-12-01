@@ -77,11 +77,15 @@ public class DependencyHandler {
     }
     
     public String getAppName() {
-        return appName;
+        return appName != null ? appName : "LibertyProject";
     }
     
     public String getServerHostPort() {
         return serverHostPort;
+    }
+
+    public String getRepositoryUrl() {
+        return getServerHostPort() + "/start/api/v1/repo";
     }
 
 }
