@@ -13,18 +13,22 @@
                     <h4 class="optionalHeading">Optional configuration:</h4>
                 </div>
                 <div class="options">
-                    <span>Name the file:</span>
-                    <input type="text"
+                    <label for="nameField">Name the file:</label>
+                    <input id="nameField"
+                           type="text"
                            placeholder="Example: LibertyProject" autocomplete="off"
                            maxlength="50" ng-model="deploy.name" ng-change="updateService()">
                 </div>
                 <div class="options">
-                    <label class="radio-inline">
-                        <input type="radio" name="buildRadio" value="{{buildType.MAVEN}}" ng-model="deploy.buildType" ng-click="updateService()">Maven
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="buildRadio" value="{{buildType.GRADLE}}" ng-model="deploy.buildType" ng-click="updateService()">Gradle
-                    </label>
+                    <fieldset class="form-group">
+                        <legend class="radio-legend">Build type:</legend>
+                        <label class="radio-inline">
+                            <input type="radio" name="buildRadio" value="{{buildType.MAVEN}}" ng-model="deploy.buildType" ng-click="updateService()">Maven
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="buildRadio" value="{{buildType.GRADLE}}" ng-model="deploy.buildType" ng-click="updateService()">Gradle
+                        </label>
+                    </fieldset>
                 </div>
                 <div class="options">
                     <label class="checkbox-inline">

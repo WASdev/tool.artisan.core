@@ -264,3 +264,11 @@
     border-color: #337ab7;
     color: #ffffff;
 }
+
+.radio-legend {
+    border-style: none;
+    font-weight: 700;
+    margin-bottom: 5px;
+    font-size: 100%;
+    max-width: 100%;
+}
