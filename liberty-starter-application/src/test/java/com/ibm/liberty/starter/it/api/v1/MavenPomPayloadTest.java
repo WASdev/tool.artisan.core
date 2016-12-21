@@ -26,8 +26,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,12 +38,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class PayloadTest {
+import com.ibm.liberty.starter.it.api.v1.utils.DownloadZip;
+
+public class MavenPomPayloadTest {
 
     private int dependencySize = 0;
     private String artifacts = "";
     private String groups = "";
     private String repoUrls = "";
+    private String artifactId = "";
+    private String groupId = "";
     private int responseStatus;
     private Object contentDisposition;
 
@@ -69,6 +71,20 @@ public class PayloadTest {
         String expectedUrl = "http://localhost:" + System.getProperty("liberty.test.port") + "/start/api/v1/repo";
         callDataEndpoint(queryString);
         assertTrue("Expected repo url to be:" + expectedUrl + ", instead found:" + repoUrls, repoUrls.contains(expectedUrl));
+    }
+    
+    @Test
+    public void testArtifactId() throws Exception {
+        String queryString = "tech=test&name=Test&artifactId=test.artifact.id";
+        callDataEndpoint(queryString);
+        assertTrue("Expected test.artifact.id artifactId. Found " + artifactId, "test.artifact.id".equals(artifactId));
+    }
+    
+    @Test
+    public void testGroupId() throws Exception {
+        String queryString = "tech=test&name=Test&artifactId=test.group.id";
+        callDataEndpoint(queryString);
+        assertTrue("Expected test.group.id groupId. Found " + groupId, "test.group.id".equals(groupId));
     }
 
     @Test
@@ -114,53 +130,9 @@ public class PayloadTest {
         assertTrue(dependencySize == 2);
     }
 
-    @Test
-    public void testBase() throws Exception {
-        Client client = ClientBuilder.newClient();
-        String port = System.getProperty("liberty.test.port");
-        String url = "http://localhost:" + port + "/start/api/v1/data?tech=test&name=Test&deploy=local";
-        System.out.println("Testing " + url);
-        Response response = client.target(url).request("application/zip").get();
-        try {
-            responseStatus = response.getStatus();
-            contentDisposition = response.getHeaders().get("Content-Disposition");
-            assertTrue("Response status is: " + responseStatus, this.responseStatus == 200);
-            // Read the response into an InputStream
-            InputStream entityInputStream = response.readEntity(InputStream.class);
-            // Create a new ZipInputStream from the response InputStream
-            ZipInputStream zipIn = new ZipInputStream(entityInputStream);
-            // This system property is being set in the liberty-starter-application/build.gradle file
-            String tempDir = System.getProperty("liberty.temp.dir");
-            File file = new File(tempDir + "/LibertyProject.zip");
-            System.out.println("Creating zip file: " + file.toString());
-            file.getParentFile().mkdirs();
-            ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(file));
-            ZipEntry inputEntry = null;
-            boolean pomExists = false;
-            while ((inputEntry = zipIn.getNextEntry()) != null) {
-                String entryName = inputEntry.getName();
-                zipOut.putNextEntry(new ZipEntry(entryName));
-                if ("pom.xml".equals(entryName)) {
-                    pomExists = true;
-                }
-            }
-            zipOut.flush();
-            zipIn.close();
-            zipOut.close();
-            System.out.println("Deleting file:" + file.toPath());
-            Files.delete(file.toPath());
-            assertTrue(pomExists);
-        } finally {
-            response.close();
-        }
-    }
 
     private void callDataEndpoint(String queryString) throws Exception {
-        Client client = ClientBuilder.newClient();
-        String port = System.getProperty("liberty.test.port");
-        String url = "http://localhost:" + port + "/start/api/v1/data?" + queryString;
-        System.out.println("Testing " + url);
-        Response response = client.target(url).request("application/zip").get();
+        Response response = DownloadZip.get(queryString);
         try {
             responseStatus = response.getStatus();
             contentDisposition = response.getHeaders().get("Content-Disposition");
@@ -197,6 +169,8 @@ public class PayloadTest {
                 DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = domFactory.newDocumentBuilder();
                 Document doc = db.parse(zipIn);
+                parseArtifactId(doc.getElementById("artifactId"));
+                parseGroupId(doc.getElementById("groupId"));
                 parseDependencies(doc.getElementsByTagName("dependencies"));
                 parseRepositories(doc.getElementsByTagName("repository"));
                 break;
@@ -251,5 +225,13 @@ public class PayloadTest {
             Node urlNode = repoNode.getElementsByTagName("url").item(0);
             repoUrls = repoUrls + urlNode.getTextContent() + ";";
         }
+    }
+    
+    private void parseArtifactId(Element element) {
+        artifactId = element.getTextContent();
+    }
+    
+    private void parseGroupId(Element element) {
+        groupId = element.getTextContent();
     }
 }
