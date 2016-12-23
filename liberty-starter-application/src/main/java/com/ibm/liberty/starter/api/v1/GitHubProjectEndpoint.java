@@ -39,6 +39,7 @@ public class GitHubProjectEndpoint {
     @GET
     public Response getResponse(@QueryParam("tech") String[] techs, @QueryParam("techoptions") String[] techOptions, @QueryParam("name") String name,
                                 @QueryParam("deploy") String deploy, @QueryParam("workspace") String workspaceId, @QueryParam("build") String build,
+                                @QueryParam("artifactId") String artifactId, @QueryParam("groupId") String groupId,
                                 @QueryParam("oAuthToken") String oAuthToken, @Context UriInfo info) throws NullPointerException, IOException {
         log.info("GET request for v1/createGitHubRepository");
         try {
@@ -49,7 +50,7 @@ public class GitHubProjectEndpoint {
             oAuthToken = URLEncoder.encode(oAuthToken, StandardCharsets.UTF_8.name());
             URI baseUri = info.getBaseUri();
             ProjectConstructionInput inputProcessor = new ProjectConstructionInput(new ServiceConnector(baseUri));
-            ProjectConstructionInputData inputData = inputProcessor.processInput(techs, techOptions, name, deploy, workspaceId, build);
+            ProjectConstructionInputData inputData = inputProcessor.processInput(techs, techOptions, name, deploy, workspaceId, build, artifactId, groupId);
             ProjectConstructor constructor = new ProjectConstructor(inputData);
             GitHubConnector connector = new GitHubConnector(oAuthToken);
             GitHubWriter writer = new GitHubWriter(constructor.buildFileMap(), inputData.appName, inputData.buildType, baseUri, connector);
