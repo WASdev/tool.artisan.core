@@ -1,4 +1,4 @@
-group = 'myParentGroupId'
+group = '%GROUP_ID%'
 version = '1.0-SNAPSHOT'
 
 buildscript {

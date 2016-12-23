@@ -31,7 +31,11 @@ public class ProjectConstructorTest {
     @Test
     public void testMapInitializer() throws IOException {
         Services services = new Services();
+<<<<<<< HEAD:liberty-starter-application/src/test/java/com/ibm/liberty/starter/unit/ProjectConstructorTest.java
         ProjectConstructor zipConstructor = new ProjectConstructor(new ProjectConstructionInputData(services, null, null, null, null, null));
+=======
+        ProjectZipConstructor zipConstructor = new ProjectZipConstructor(null, services, null, null, null, null, null, null);
+>>>>>>> 153f528... Fix maven pom integration tests and add gradle unit tests and CreateArtifactConfigTag files.:liberty-starter-application/src/test/java/com/ibm/liberty/starter/unit/ZipConstructorTest.java
         zipConstructor.initializeMap();
         Map<String, byte[]> map = zipConstructor.getFileMap();
         assertThat(map, is(not(anEmptyMap())));

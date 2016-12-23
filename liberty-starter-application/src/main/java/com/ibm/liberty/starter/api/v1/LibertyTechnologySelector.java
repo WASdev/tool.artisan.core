@@ -40,11 +40,12 @@ public class LibertyTechnologySelector {
     @GET
     @Produces("application/zip")
     public Response getResponse(@QueryParam("tech") String[] techs, @QueryParam("techoptions") String[] techOptions, @QueryParam("name") String name,
-                                @QueryParam("deploy") final String deploy, @QueryParam("workspace") final String workspaceId, @QueryParam("build") final String build, @Context UriInfo info) throws NullPointerException, IOException {
+                                @QueryParam("deploy") final String deploy, @QueryParam("workspace") final String workspaceId, @QueryParam("build") final String build, 
+                                @QueryParam("artifactId") String artifactId, @QueryParam("groupId") String groupId, @Context UriInfo info) throws NullPointerException, IOException {
         log.info("GET request for /data");
         try {
             ProjectConstructionInput inputProcessor = new ProjectConstructionInput(new ServiceConnector(info.getBaseUri()));
-            final ProjectConstructionInputData inputData = inputProcessor.processInput(techs, techOptions, name, deploy, workspaceId, build);
+            final ProjectConstructionInputData inputData = inputProcessor.processInput(techs, techOptions, name, deploy, workspaceId, build, artifactId, groupId);
             StreamingOutput so = (OutputStream os) -> {
                 ProjectConstructor projectConstructor = new ProjectConstructor(inputData);
                 try {
@@ -57,11 +58,11 @@ public class LibertyTechnologySelector {
             };
             name += ".zip";
             return Response.ok(so, "application/zip").header("Content-Disposition", "attachment; filename=\"" + name + "\"").build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
         } catch (ValidationException e) {
             return Response.status(Status.BAD_REQUEST).entity("Validation of the input failed.").build();
         } catch (Exception e) {
+            e.printStackTrace(System.err);
+            log.severe(e.getClass().getName() + " caught " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

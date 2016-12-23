@@ -10,7 +10,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertTrue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -26,8 +25,8 @@ public class AppArtifactConfigCommandTest {
     public void setupTemplatePom() throws ParserConfigurationException {
         pom = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         project = DomUtil.addChildNode(pom, pom, "project", null);
-        DomUtil.addChildNode(pom, project, "artifactId", "liberty.maven");
-        DomUtil.addChildNode(pom, project, "groupId", "test");
+        DomUtil.addChildNode(pom, project, "artifactId", "test");
+        DomUtil.addChildNode(pom, project, "groupId", "liberty.maven");
     }
     
     @Test

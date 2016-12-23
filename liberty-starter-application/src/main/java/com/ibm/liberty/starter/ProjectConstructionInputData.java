@@ -24,13 +24,17 @@ public class ProjectConstructionInputData {
     public final ProjectConstructor.DeployType deployType;
     public final ProjectConstructor.BuildType buildType;
     public final String workspaceDirectory;
+    public final String artifactId;
+    public final String groupId;
 
-    public ProjectConstructionInputData(Services services, ServiceConnector serviceConnector, String appName, ProjectConstructor.DeployType deployType, ProjectConstructor.BuildType buildType, String workspaceDirectory) {
+    public ProjectConstructionInputData(Services services, ServiceConnector serviceConnector, String appName, ProjectConstructor.DeployType deployType, ProjectConstructor.BuildType buildType, String workspaceDirectory, String artifactId, String groupId) {
         this.services = services;
         this.serviceConnector = serviceConnector;
         this.appName = appName;
         this.deployType = deployType;
         this.buildType = buildType;
         this.workspaceDirectory = workspaceDirectory;
+        this.artifactId = artifactId;
+        this.groupId = groupId;
     }
 }

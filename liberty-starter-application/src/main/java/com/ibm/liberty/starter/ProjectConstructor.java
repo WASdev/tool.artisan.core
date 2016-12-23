@@ -35,6 +35,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import com.ibm.liberty.starter.api.v1.model.internal.Services;
+import com.ibm.liberty.starter.api.v1.model.provider.Location;
+import com.ibm.liberty.starter.api.v1.model.provider.Provider;
+import com.ibm.liberty.starter.api.v1.model.provider.Sample;
+import com.ibm.liberty.starter.api.v1.model.registration.Service;
+import com.ibm.liberty.starter.api.v1.temp.ServiceFinder;
+import com.ibm.liberty.starter.build.maven.AddDependenciesCommand;
+import com.ibm.liberty.starter.build.maven.AddFeaturesCommand;
+import com.ibm.liberty.starter.build.maven.AppArtifactConfigCommand;
+import com.ibm.liberty.starter.build.maven.AppNameCommand;
+import com.ibm.liberty.starter.build.maven.PomModifierCommand;
+import com.ibm.liberty.starter.build.maven.SetDefaultProfileCommand;
+import com.ibm.liberty.starter.build.maven.SetRepositoryCommand;
+import com.ibm.liberty.starter.build.maven.PomModifier;
 
 public class ProjectConstructor {
     
@@ -45,6 +59,7 @@ public class ProjectConstructor {
     private static final String INDEX_HTML_PATH = "src/main/webapp/index.html";
     private static final String POM_FILE = "pom.xml";
     private static final String GRADLE_BUILD_FILE = "build.gradle";
+    private static final String GRADLE_SETTINGS_FILE = "settings.gradle";
     private final ProjectConstructionInputData inputData;
 
     public ProjectConstructor(ProjectConstructionInputData inputData) {
@@ -226,14 +241,12 @@ public class ProjectConstructor {
         buildTags.putAll(new CreateDependencyTags(depHand).getTags());
         buildTags.putAll(new CreateFeaturesTags(new FeaturesToInstallProvider(inputData.services, inputData.serviceConnector)).getTags());
         buildTags.putAll(new CreateRepositoryTags(depHand).getTags());
-        TemplatedFileToBytesConverter fileConverter = new TemplatedFileToBytesConverter(this.getClass().getClassLoader().getResourceAsStream(GRADLE_BUILD_FILE), buildTags);
-        putFileInMap("build.gradle", fileConverter.getBytes());
+        buildTags.putAll(new CreateArtifactConfigTags(inputData.artifactId, inputData.groupId).getTags());
+        TemplatedFileToBytesConverter gradleBuildFileConverter = new TemplatedFileToBytesConverter(this.getClass().getClassLoader().getResourceAsStream(GRADLE_BUILD_FILE), buildTags);
+        putFileInMap(GRADLE_BUILD_FILE, gradleBuildFileConverter.getBytes());
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream settingsStream = this.getClass().getClassLoader().getResourceAsStream("settings.gradle");
-        IOUtils.copy(settingsStream, baos);
-        settingsStream.close();
-        putFileInMap("settings.gradle", baos.toByteArray());
+        TemplatedFileToBytesConverter gradleSettingsFileConverter = new TemplatedFileToBytesConverter(this.getClass().getClassLoader().getResourceAsStream(GRADLE_SETTINGS_FILE), buildTags);
+        putFileInMap(GRADLE_SETTINGS_FILE, gradleSettingsFileConverter.getBytes());
     }
     
     public void addPomFileToMap() throws SAXException, IOException, ParserConfigurationException, TransformerException {
@@ -246,6 +259,7 @@ public class ProjectConstructor {
         commands.add(new SetDefaultProfileCommand(inputData.deployType));
         commands.add(new SetRepositoryCommand(depHand));
         commands.add(new AddFeaturesCommand(new FeaturesToInstallProvider(inputData.services, inputData.serviceConnector)));
+        commands.add(new AppArtifactConfigCommand(inputData.artifactId, inputData.groupId));
         PomModifier pomModifier = new PomModifier(inputStream, commands);
         byte[] bytes = pomModifier.getPomBytes();
         putFileInMap("pom.xml", bytes);

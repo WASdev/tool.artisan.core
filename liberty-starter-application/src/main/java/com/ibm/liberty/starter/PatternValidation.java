@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class PatternValidation {
 
     public enum PatternType {
-        TECH, NAME, PATH_EXTENSION
+        TECH, NAME, PATH_EXTENSION, ARTIFACT_ID
     }
 
     public static boolean checkPattern(PatternType patternType, String object) {
@@ -43,6 +43,9 @@ public class PatternValidation {
                 break;
             case PATH_EXTENSION:
                 pattern = Pattern.compile("[a-zA-Z0-9-_/.]*");
+                break;
+            case ARTIFACT_ID:
+                pattern = Pattern.compile("[a-zA-Z0-9-_.]*");
                 break;
         }
         return pattern;

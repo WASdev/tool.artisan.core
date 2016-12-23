@@ -19,16 +19,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -38,6 +41,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.ibm.liberty.starter.build.maven.DomUtil;
 import com.ibm.liberty.starter.it.api.v1.utils.DownloadZip;
 
 public class MavenPomPayloadTest {
@@ -67,7 +71,7 @@ public class MavenPomPayloadTest {
 
     @Test
     public void testRepoUrl() throws Exception {
-        String queryString = "tech=test&name=TestApp&deploy=local";
+        String queryString = "tech=test&name=TestApp&deploy=local&artifactId=testArtifactId&groupId=test.group.id";
         String expectedUrl = "http://localhost:" + System.getProperty("liberty.test.port") + "/start/api/v1/repo";
         callDataEndpoint(queryString);
         assertTrue("Expected repo url to be:" + expectedUrl + ", instead found:" + repoUrls, repoUrls.contains(expectedUrl));
@@ -75,14 +79,14 @@ public class MavenPomPayloadTest {
     
     @Test
     public void testArtifactId() throws Exception {
-        String queryString = "tech=test&name=Test&artifactId=test.artifact.id";
+        String queryString = "tech=test&name=Test&artifactId=test.artifact.id&deploy=local";
         callDataEndpoint(queryString);
         assertTrue("Expected test.artifact.id artifactId. Found " + artifactId, "test.artifact.id".equals(artifactId));
     }
     
     @Test
     public void testGroupId() throws Exception {
-        String queryString = "tech=test&name=Test&artifactId=test.group.id";
+        String queryString = "tech=test&name=Test&groupId=test.group.id&deploy=local";
         callDataEndpoint(queryString);
         assertTrue("Expected test.group.id groupId. Found " + groupId, "test.group.id".equals(groupId));
     }
@@ -159,36 +163,32 @@ public class MavenPomPayloadTest {
         File file = new File(tempDir + "/TestApp.zip");
         System.out.println("Creating zip file: " + file.toString());
         file.getParentFile().mkdirs();
-        ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(file));
         ZipEntry inputEntry = null;
         while ((inputEntry = zipIn.getNextEntry()) != null) {
             String entryName = inputEntry.getName();
-            zipOut.putNextEntry(new ZipEntry(entryName));
             if ("pom.xml".equals(entryName)) {
                 System.out.println("Found pom.xml file.");
                 DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = domFactory.newDocumentBuilder();
                 Document doc = db.parse(zipIn);
-                parseArtifactId(doc.getElementById("artifactId"));
-                parseGroupId(doc.getElementById("groupId"));
+                printPomToSysOut(doc);
+                parsePomConfig(doc);
                 parseDependencies(doc.getElementsByTagName("dependencies"));
                 parseRepositories(doc.getElementsByTagName("repository"));
                 break;
-            } else {
-                byte[] bytes = new byte[4096];
-                int bytesRead = 0;
-                while ((bytesRead = zipIn.read(bytes)) >= 0) {
-                    zipOut.write(bytes, 0, bytesRead);
-                }
             }
-            zipOut.closeEntry();
             zipIn.closeEntry();
         }
-        zipOut.flush();
         zipIn.close();
-        zipOut.close();
-        System.out.println("Deleting file:" + file.toPath());
-        Files.delete(file.toPath());
+    }
+    
+    private void printPomToSysOut(Document pom) throws TransformerFactoryConfigurationError, TransformerException {
+        DOMSource domSource = new DOMSource(pom);
+        StreamResult streamResult = new StreamResult(System.out);
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        transformer.transform(domSource, streamResult);
     }
 
     private void parseDependencies(NodeList pomDepend) {
@@ -227,11 +227,11 @@ public class MavenPomPayloadTest {
         }
     }
     
-    private void parseArtifactId(Element element) {
-        artifactId = element.getTextContent();
-    }
-    
-    private void parseGroupId(Element element) {
-        groupId = element.getTextContent();
+    private void parsePomConfig(Document doc) {
+        Node project = doc.getElementsByTagName("project").item(0);
+        Node artifactIdNode = DomUtil.getChildNode(project, "artifactId", null);
+        artifactId = artifactIdNode.getTextContent();
+        Node groupIdNode = DomUtil.getChildNode(project, "groupId", null);
+        groupId = groupIdNode.getTextContent();
     }
 }

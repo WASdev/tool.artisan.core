@@ -32,7 +32,7 @@ public class ProjectConstructionInput {
         this.serviceConnector = serviceConnector;
     }
 
-    public ProjectConstructionInputData processInput(String[] techs, String[] techOptions, String name, String deploy, String workspaceId, String build) {
+    public ProjectConstructionInputData processInput(String[] techs, String[] techOptions, String name, String deploy, String workspaceId, String build, String artifactId, String groupId) {
         List<Service> serviceList = new ArrayList<Service>();
         for (String tech : techs) {
             if (PatternValidation.checkPattern(PatternValidation.PatternType.TECH, tech)) {
@@ -75,7 +75,16 @@ public class ProjectConstructionInput {
         } catch (Exception e) {
             buildType = ProjectConstructor.BuildType.MAVEN;
         }
-        return new ProjectConstructionInputData(services, serviceConnector, name, deployType, buildType, StarterUtil.getWorkspaceDir(workspaceId));
+        if (artifactId != null && !PatternValidation.checkPattern(PatternValidation.PatternType.ARTIFACT_ID, artifactId)) {
+            log.severe("Invalid artifactId.");
+            throw new ValidationException();
+        }
+        
+        if (groupId != null && !PatternValidation.checkPattern(PatternValidation.PatternType.ARTIFACT_ID, artifactId)) {
+            log.severe("Invalid groupId.");
+            throw new ValidationException();
+        }
+        return new ProjectConstructionInputData(services, serviceConnector, name, deployType, buildType, StarterUtil.getWorkspaceDir(workspaceId), artifactId, groupId);
     }
 
     private String getTechOptions(String[] techOptions, String tech) {
