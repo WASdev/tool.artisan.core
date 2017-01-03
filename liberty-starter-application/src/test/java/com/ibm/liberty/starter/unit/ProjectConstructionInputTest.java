@@ -52,8 +52,10 @@ public class ProjectConstructionInputTest {
         String techOption = "fish";
         String name = "testName";
         String workspaceId = "randomId";
+        String artifactId = "testArtifactId";
+        String groupId = "test.group.id";
 
-        ProjectConstructionInputData result = testObject.processInput(new String[] {techName}, new String[] {techName + ":" + techOption}, name, "local", workspaceId, "gradle");
+        ProjectConstructionInputData result = testObject.processInput(new String[] {techName}, new String[] {techName + ":" + techOption}, name, "local", workspaceId, "gradle", artifactId, groupId);
 
         assertThat(result.appName, is(name));
         assertThat(result.buildType, is(ProjectConstructor.BuildType.GRADLE));
@@ -62,6 +64,8 @@ public class ProjectConstructionInputTest {
         assertThat(result.serviceConnector, is(serviceConnector));
         assertThat(result.services.getServices(), hasSize(1));
         assertThat(result.services.getServices().get(0).getId(), is(techName));
+        assertThat(result.artifactId, is(artifactId));
+        assertThat(result.groupId, is(groupId));
         assertThat(serviceConnector.capturedTechWorkspaceDir, containsString(workspaceId));
         assertThat(serviceConnector.capturedTechs, is(new String[] {techName}));
         assertThat(serviceConnector.capturedOptions, is(techOption));
@@ -69,40 +73,50 @@ public class ProjectConstructionInputTest {
 
     @Test(expected = ValidationException.class)
     public void noNameThrowsAValidationException() throws Exception {
-        testObject.processInput(new String[] {}, new String[] {}, null, "local", "wibble", "gradle");
+        testObject.processInput(new String[] {}, new String[] {}, null, "local", "wibble", "gradle", null, null);
     }
 
     @Test(expected = ValidationException.class)
     public void nameWithInvalidCharactersThrowsAValidationException() throws Exception {
-        testObject.processInput(new String[] {}, new String[] {}, "wibble%", "local", "wibble", "gradle");
+        testObject.processInput(new String[] {}, new String[] {}, "wibble%", "local", "wibble", "gradle", null, null);
     }
 
     @Test(expected = ValidationException.class)
     public void longNameThrowsAValidationException() throws Exception {
-        testObject.processInput(new String[] {}, new String[] {}, "ThisIsAReallyLongNameButIsItLongEnoughNotQuiteSoLetsKeepGoing", "local", "wibble", "gradle");
+        testObject.processInput(new String[] {}, new String[] {}, "ThisIsAReallyLongNameButIsItLongEnoughNotQuiteSoLetsKeepGoing", "local", "wibble", "gradle", null, null);
     }
 
     @Test(expected = ValidationException.class)
     public void noDeployThrowsAValidationException() throws Exception {
-        testObject.processInput(new String[] {}, new String[] {}, "wibble", null, "wibble", "gradle");
+        testObject.processInput(new String[] {}, new String[] {}, "wibble", null, "wibble", "gradle", null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void invalidDeployThrowsAIllegalArgumentException() throws Exception {
-        testObject.processInput(new String[] {}, new String[] {}, "wibble", "invalid", "wibble", "gradle");
+        testObject.processInput(new String[] {}, new String[] {}, "wibble", "invalid", "wibble", "gradle", null, null);
     }
 
     @Test
     public void noBuildDefaultsToMaven() throws Exception {
-        ProjectConstructionInputData result = testObject.processInput(new String[]{}, new String[]{}, "wibble", "local", "wibble", null);
+        ProjectConstructionInputData result = testObject.processInput(new String[]{}, new String[]{}, "wibble", "local", "wibble", null, null, null);
 
         assertThat(result.buildType, is(ProjectConstructor.BuildType.MAVEN));
     }
 
     @Test
     public void invalidBuildDefaultsToMaven() throws Exception {
-        ProjectConstructionInputData result = testObject.processInput(new String[]{}, new String[]{}, "wibble", "local", "wibble", "wibble");
+        ProjectConstructionInputData result = testObject.processInput(new String[]{}, new String[]{}, "wibble", "local", "wibble", "wibble", null, null);
 
         assertThat(result.buildType, is(ProjectConstructor.BuildType.MAVEN));
+    }
+    
+    @Test(expected = ValidationException.class)
+    public void invalidArtifactIdThrowsIllegalArgumentException() throws Exception {
+        testObject.processInput(new String[] {}, new String[] {}, "wibble", "local", "wibble", "gradle", "%wibble", null);
+    }
+    
+    @Test(expected = ValidationException.class)
+    public void invalidGroupIdThrowsIllegalArgumentException() throws Exception {
+        testObject.processInput(new String[] {}, new String[] {}, "wibble", "local", "wibble", "gradle", null, "%wibble");
     }
 }

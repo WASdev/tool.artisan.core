@@ -80,7 +80,7 @@ public class ProjectConstructionInput {
             throw new ValidationException();
         }
         
-        if (groupId != null && !PatternValidation.checkPattern(PatternValidation.PatternType.ARTIFACT_ID, artifactId)) {
+        if (groupId != null && !PatternValidation.checkPattern(PatternValidation.PatternType.ARTIFACT_ID, groupId)) {
             log.severe("Invalid groupId.");
             throw new ValidationException();
         }
