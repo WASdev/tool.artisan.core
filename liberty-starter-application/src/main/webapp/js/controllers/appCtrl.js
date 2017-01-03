@@ -33,7 +33,9 @@ angular.module('appAccelerator')
   $scope.selectedCount = 0;
   $scope.deploy = {bluemix : appacc.deployToBluemix(),
     name : "LibertyProject",
-    buildType : appacc.updateBuildType()
+    buildType : appacc.updateBuildType(),
+    artifactid : null,
+    groupid : null
   };
 
   $scope.createDownloadUrl = function() {
@@ -88,6 +90,8 @@ angular.module('appAccelerator')
     appacc.deployToBluemix($scope.deploy.bluemix);
     $log.debug("AppAccelerator : DeployToBluemix has value:" + appacc.deployToBluemix());
     appacc.updateName($scope.deploy.name);
+    appacc.updateArtifactId($scope.deploy.artifactid);
+    appacc.updateGroupId($scope.deploy.groupid);
     $log.debug("Updating build type to " + $scope.deploy.buildType);
     appacc.updateBuildType($scope.deploy.buildType);
     appacc.notifyListeners();

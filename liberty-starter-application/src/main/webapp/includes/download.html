@@ -20,6 +20,20 @@
                            maxlength="50" ng-model="deploy.name" ng-change="updateService()">
                 </div>
                 <div class="options">
+                    <label for="nameField">GroupId:</label>
+                    <input id="nameField"
+                           type="text"
+                           placeholder="Example: test.group.id" autocomplete="off"
+                           maxlength="50" ng-model="deploy.groupid" ng-change="updateService()">
+                </div>
+                <div class="options">
+                    <label for="nameField">ArtifactId:</label>
+                    <input id="nameField"
+                           type="text"
+                           placeholder="Example: testArtifactId" autocomplete="off"
+                           maxlength="50" ng-model="deploy.artifactid" ng-change="updateService()">
+                </div>
+                <div class="options">
                     <fieldset class="form-group">
                         <legend class="radio-legend">Build type:</legend>
                         <label class="radio-inline">

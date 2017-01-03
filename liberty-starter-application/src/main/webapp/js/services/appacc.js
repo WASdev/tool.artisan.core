@@ -41,6 +41,8 @@ angular.module('appAccelerator')
      var selectedTechnologies = [];  //list of technologies currrently selected by the user
      var projectName = undefined;
      var workspaceID = undefined;
+     var projectArtifactId = undefined;
+     var projectGroupId = undefined;
 
      var retrieveWorkspaceId = function() {
        $log.debug("AppAcc Svc : GET : workspace ID");
@@ -144,6 +146,12 @@ angular.module('appAccelerator')
             for(var i = 0; i < techOptions.length; i++) {
               url += "&techoptions=" + techOptions[i];
             }
+            if(projectGroupId) {
+              url += "&groupId=" + projectGroupId;
+            }
+            if(projectArtifactId) {
+              url += "&artifactId=" + projectArtifactId;
+            }
             $log.debug("Constructed " + url);
 
           } else {
@@ -212,6 +220,20 @@ angular.module('appAccelerator')
         }
         return projectName;
       }
+      
+      var updateArtifactId = function(artifactId) {
+        if (artifactId != undefined) {
+          projectArtifactId = artifactId;
+        }
+        return projectArtifactId;
+      }
+      
+      var updateGroupId = function(groupId) {
+          if (groupId != undefined) {
+            projectGroupId = groupId;
+          }
+          return projectGroupId;
+        }
 
       var updateBuildType = function(newBuildType) {
         for (var validBuildType in buildType) {
@@ -261,6 +283,8 @@ angular.module('appAccelerator')
         isSelected : isSelected,
         deployToBluemix : deployToBluemix,
         updateName : updateName,
+        updateArtifactId : updateArtifactId,
+        updateGroupId : updateGroupId,
         notifyListeners : notifyListeners,
         addListener : addListener,
         retrieveWorkspaceId : retrieveWorkspaceId,
