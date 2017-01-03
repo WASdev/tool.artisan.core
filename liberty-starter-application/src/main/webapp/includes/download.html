@@ -12,22 +12,22 @@
                 <div>
                     <h4 class="optionalHeading">Optional configuration:</h4>
                 </div>
-                <div class="options">
-                    <label for="nameField">Name the file:</label>
+                <div class="row options">
+                    <label for="nameField"class="textLabel col-md-2 col-sm-2">Name the file:</label>
                     <input id="nameField"
                            type="text"
                            placeholder="Example: LibertyProject" autocomplete="off"
                            maxlength="50" ng-model="deploy.name" ng-change="updateService()">
                 </div>
-                <div class="options">
-                    <label for="nameField">GroupId:</label>
+                <div class="row options">
+                    <label for="nameField"class="textLabel col-md-2 col-sm-2">Group id:</label>
                     <input id="nameField"
                            type="text"
                            placeholder="Example: test.group.id" autocomplete="off"
                            maxlength="50" ng-model="deploy.groupid" ng-change="updateService()">
                 </div>
-                <div class="options">
-                    <label for="nameField">ArtifactId:</label>
+                <div class="row options">
+                    <label for="nameField" class="textLabel col-md-2 col-sm-2">Artifact id:</label>
                     <input id="nameField"
                            type="text"
                            placeholder="Example: testArtifactId" autocomplete="off"

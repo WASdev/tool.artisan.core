@@ -181,6 +181,11 @@
     margin-top: 18px;
 }
 
+.textLabel {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
 .icon {
     background-color: #337ab7;
     border-style: none;
