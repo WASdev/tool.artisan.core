@@ -176,6 +176,14 @@
   background-image: none;
 }
 
+.tech-with-logo {
+    padding-left: 5px;
+}
+
+.tech-logo img {
+    height: 20px;
+}
+
 .options {
     margin-left: 36px;
     margin-top: 18px;

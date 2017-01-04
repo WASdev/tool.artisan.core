@@ -47,7 +47,9 @@
             "name": "MicroProfile",
             "description": "Support for technologies required by the MicroProfile community effort. See microprofile.io.",
             "endpoint": "/microprofile",
-            "options" : false
+            "options" : false,
+            "image" : "img/MicroprofileLogoCropped.png",
+            "imageSelected" : "img/MicroprofileLogoCroppedSelected.png"
         },
         {
             "id" : "swagger",

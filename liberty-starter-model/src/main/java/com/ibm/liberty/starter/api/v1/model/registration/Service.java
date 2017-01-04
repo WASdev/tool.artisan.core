@@ -25,6 +25,8 @@ public class Service {
     private String endpoint;
     private String configuration;
     private boolean options;
+    private String image;
+    private String imageSelected;
 
     @ApiModelProperty(value="Unique ID for this technology", required=true)
     public String getId() {
@@ -77,5 +79,23 @@ public class Service {
     @Override
     public String toString() {
         return "Service [id=" + id + ", endpoint=" + endpoint + "]";
+    }
+    
+    @ApiModelProperty(value="Specifies an image to display on the technology button", required=false)
+    public String getImage() {
+        return image;
+    }
+    
+    public void setImage(String image) {
+        this.image = image;
+    }
+    
+    @ApiModelProperty(value="Specifies an image to display on the technology button when it is selected", required=false)
+    public String getImageSelected() {
+        return imageSelected;
+    }
+    
+    public void setImageSelected(String image) {
+        this.imageSelected = image;
     }
 }

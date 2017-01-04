@@ -34,8 +34,10 @@
                   <div class="panel {{technology.panel}}">
                       <div class="panel-heading" ng-click="toggleSelected(technology, $event)" role="button">
                           <div class="row">
-                              <div class="col-md-6">{{technology.name}}</div>
-                              <div class="col-md-6 text-right">
+                              <div class="col-md-2 tech-logo" ng-show="technology.image && !technology.selected"><img ng-src="{{technology.image}}"/></div>
+                              <div class="col-md-2 tech-logo" ng-show="technology.imageSelected && technology.selected"><img ng-src="{{technology.imageSelected}}"/></div>
+                              <div class="col-md-{{technology.image ? 5 : 7}} {{technology.image ? 'tech-with-logo' : ''}}">{{technology.name}}</div>
+                              <div class="col-md-5 text-right">
                                   <button class="{{technology.iconstyle}}" ng-click="toggleSelected(technology, $event)" role="button">
                                       <i class="fa fa-square-o" aria-hidden="true" ng-show="!technology.selected"  data-toggle="tooltip" title="Click to add this technology to your project"></i>
                                       <i class="fa fa-check-square-o" aria-hidden="true" ng-show="technology.selected" data-toggle="tooltip" title="Click to remove this technology from your project"></i>
