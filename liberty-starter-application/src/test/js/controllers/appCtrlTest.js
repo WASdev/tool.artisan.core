@@ -8,7 +8,7 @@ describe('appCtrl', function() {
   }));
 
   describe('$scope.buildType', function() {
-    it('cotains maven and gradle as options', function() {
+    it('contains maven and gradle as options', function() {
       var $scope = {};
       var controller = $controller('appCtrl', { $scope: $scope });
       expect($scope.buildType.GRADLE).toBe('GRADLE');

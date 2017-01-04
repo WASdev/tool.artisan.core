@@ -12,6 +12,18 @@ describe('appacc', function() {
       var url = appacc.createDownloadUrl();
       expect(url).toContain('&build=GRADLE');
     });
+    it('adds the artifactId to the URL if it is provided', function() {
+      appacc.updateArtifactId('testArtifactId');
+      appacc.addSelectedTechnology('testTechnology');
+      var url = appacc.createDownloadUrl();
+      expect(url).toContain('&artifactId=testArtifactId');
+    });
+    it('adds the groupId to the URL if it is provided', function() {
+        appacc.updateGroupId('test.group.id');
+        appacc.addSelectedTechnology('testTechnology');
+        var url = appacc.createDownloadUrl();
+        expect(url).toContain('&groupId=test.group.id');
+    });
   });
 
   describe('updateBuildType', function() {
