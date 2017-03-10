@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/ 
+*/
 
 package com.ibm.liberty.starter.gradle
 
@@ -23,6 +23,7 @@ import org.gradle.api.tasks.TaskAction
 class MavenTask extends DefaultTask {
     String id = 'unknown'
     String[] pomVersion = ['0.0.1']
+    String[] jarArtifacts = []
     boolean hasProvided = false;
     boolean hasRuntime = false;
     boolean hasCompile = false;
@@ -31,7 +32,7 @@ class MavenTask extends DefaultTask {
     MavenTask() {
         setupUpToDateCheckDirectories()
     }
-    
+
     def setupUpToDateCheckDirectories() {
         inputs.dir(new File(project.projectDir, 'repository'))
         outputs.dir(new File(project.buildDir, 'mavenRepository/artifacts'))
@@ -50,13 +51,13 @@ class MavenTask extends DefaultTask {
     }
 
     def generateMavenInstallArgs = { fileName, artifactId, packaging, pomVersion ->
-    [ 'install:install-file', 
-      "-Dfile=" + project.projectDir.getAbsolutePath() + "/repository/" + pomVersion + "/" + fileName, 
-      '-DgroupId=net.wasdev.wlp.starters.' + id, 
-      '-DartifactId=' + artifactId, 
-      '-Dversion=' + pomVersion, 
-      '-Dpackaging=' + packaging, 
-      "-DlocalRepositoryPath=" + project.buildDir.getAbsolutePath() + "/mavenRepository/artifacts", 
+    [ 'install:install-file',
+      "-Dfile=" + project.projectDir.getAbsolutePath() + "/repository/" + pomVersion + "/" + fileName,
+      '-DgroupId=net.wasdev.wlp.starters.' + id,
+      '-DartifactId=' + artifactId,
+      '-Dversion=' + pomVersion,
+      '-Dpackaging=' + packaging,
+      "-DlocalRepositoryPath=" + project.buildDir.getAbsolutePath() + "/mavenRepository/artifacts",
       '-DcreateChecksum=true']
     }
 
@@ -72,7 +73,7 @@ class MavenTask extends DefaultTask {
 
             if(hasProvided) {
                 println "Installing provided POM"
-                project.exec {	
+                project.exec {
                     commandLine cmd
                     args provargs
                 }
@@ -80,23 +81,33 @@ class MavenTask extends DefaultTask {
 
             if(hasRuntime) {
                 println "Installing runtime POM"
-                project.exec {	
+                project.exec {
                     commandLine cmd
                     args runargs
                 }
             }
             if(hasCompile) {
                 println "Installing compile POM"
-                project.exec {  
+                project.exec {
                     commandLine cmd
                     args comargs
                 }
             }
             if(hasServerSnippet) {
                 println "Installing server snippet"
-                project.exec {  
+                project.exec {
                     commandLine cmd
                     args serverargs
+                }
+            }
+
+            int jarLength = jarArtifacts.length
+            for (def int j = 0; j < jarLength; j++) {
+                def jarsargs = generateMavenInstallArgs(jarArtifacts[j]+".jar", jarArtifacts[j], 'jar', pomVersion[i])
+                println "Installing jars"
+                project.exec {
+                    commandLine cmd
+                    args jsrsargs
                 }
             }
         }
