@@ -1,11 +1,11 @@
 <!-- Copyright (c) 2016 IBM Corp.
- 
+
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
- 
+
      http://www.apache.org/licenses/LICENSE-2.0
- 
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,15 +22,15 @@
         <feature>apiDiscovery-1.0</feature>
         <feature>jndi-1.0</feature>
 	</featureManager>
-    
+
     <httpEndpoint httpPort="9082" httpsPort="9445" id="defaultHttpEndpoint" host="*"/>
 
     <keyStore password="password" />
-    
+
     <basicRegistry id="basic" realm="ibm/api">
         <user name="guest" password="password" />
     </basicRegistry>
-    
+
     <jndiEntry jndiName="serverOutputDir" value="${server.output.dir}" />
     <jndiEntry jndiName="javaHome" value="${java.home}" />
     <jndiEntry jndiName="sharedResourceDir" value="${shared.resource.dir}" />
@@ -48,5 +48,6 @@
     <application location="starter-microservice-websocket.war" id="websocket" context-root="/websocket"></application>
     <application location="starter-microservice-springboot-web.war" id="springbootweb" context-root="/springbootweb"></application>
     <application location="starter-microservice-microprofile.war" id="microprofile" context-root="/microprofile"></application>
+    <application location="starter-microprofile-apis.war" id="microprofile-apis" context-root="/microprofile-apis"></application>
     <application location="starter-microservice-swagger.war" id="swagger" context-root="/swagger"></application>
 </server>

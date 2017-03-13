@@ -107,7 +107,7 @@ class MavenTask extends DefaultTask {
                 println "Installing jars"
                 project.exec {
                     commandLine cmd
-                    args jsrsargs
+                    args jarsargs
                 }
             }
         }

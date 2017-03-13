@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 IBM Corp.
+ * Copyright (c) 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,13 @@ buildutils {
 
 task installAllPOMs(type: MavenTask) {
     id 'microprofile-apis'
-    def String[] localVersion = ['0.0.1']
+    def String[] localVersion = ['0.1']
     pomVersion localVersion
-    def String[] localJarArtifacts = ['com.ibm.websphere.org.eclipse.microprofile.config.0.1_1.0.17','com.ibm.websphere.microprofile.faulttolerance_1.0.17']
+    def String[] localJarArtifacts = ['config','faulttolerance']
     jarArtifacts localJarArtifacts
 }
 
 task fvt(type: FvtTask) {
-    id 'starter-microservice-microprofile'
-    finalizedBy libertyStop
 }
 
 apply from: '../tech-type-task-graph.gradle'

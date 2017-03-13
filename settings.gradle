@@ -12,7 +12,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-*/ 
+*/
 
 /*
 // To declare projects as part of a multi-project build use the 'include' method
@@ -22,4 +22,4 @@ include 'services:webservice'
 */
 
 rootProject.name = 'LibertyUserExperience'
-include 'liberty-starter-wlpcfg', 'liberty-filter-application', 'liberty-starter-application', 'starter-microservice-test', 'starter-microservice-web', 'starter-microservice-persistence', 'starter-microservice-rest', 'starter-microservice-websocket', 'starter-microservice-watsonsdk', 'starter-microservice-springboot-web', 'starter-microservice-microprofile', 'starter-microservice-swagger', 'liberty-starter-model', 'liberty-starter-common'
+include 'liberty-starter-wlpcfg', 'liberty-filter-application', 'liberty-starter-application', 'starter-microservice-test', 'starter-microservice-web', 'starter-microservice-persistence', 'starter-microservice-rest', 'starter-microservice-websocket', 'starter-microservice-watsonsdk', 'starter-microservice-springboot-web', 'starter-microservice-microprofile', 'starter-microservice-swagger', 'starter-microprofile-apis', 'liberty-starter-model', 'liberty-starter-common'
