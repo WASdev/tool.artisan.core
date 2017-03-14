@@ -141,10 +141,21 @@ public class ServiceConnector {
         String url = urlConstructor("/artifacts/" + extension, service);
         return getObjectFromEndpoint(InputStream.class, url, MediaType.WILDCARD_TYPE);
     }
-    
+
+    public InputStream getArtifactAsInputStream(String endpoint, String extension) {
+        extension = extension.startsWith("/") ? extension.substring(1) : extension;
+        String url = urlConstructor("/artifacts/" + extension, endpoint);
+        return getObjectFromEndpoint(InputStream.class, url, MediaType.WILDCARD_TYPE);
+    }
+
     private String urlConstructor(String extension, Service service) {
-        log.fine("Constructing url:" + internalServerHostPort + "+" + service.getEndpoint() + "+" + extension);
-        String url = internalServerHostPort + service.getEndpoint() + extension;
+        String url = urlConstructor(extension, service.getEndpoint());
+        return url;
+    }
+
+    private String urlConstructor(String extension, String endpoint) {
+        log.fine("Constructing url:" + internalServerHostPort + "+" + endpoint + "+" + extension);
+        String url = internalServerHostPort + endpoint + extension;
         return url;
     }
     
