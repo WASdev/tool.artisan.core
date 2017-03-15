@@ -18,7 +18,7 @@ package com.ibm.liberty.starter.service.microprofile.api;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("/")
+@ApplicationPath("available")
 public class TechnologyAPI extends Application {
 
 

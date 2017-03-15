@@ -32,7 +32,7 @@ import com.ibm.liberty.starter.api.v1.model.provider.Dependency.Scope;
 import com.ibm.liberty.starter.api.v1.model.provider.Location;
 import com.ibm.liberty.starter.api.v1.model.provider.Provider;
 
-@Path("/")
+@Path("")
 public class ProviderEndpoint {
 
     @GET

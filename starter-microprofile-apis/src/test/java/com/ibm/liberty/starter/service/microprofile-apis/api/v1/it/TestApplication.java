@@ -34,12 +34,12 @@ public class TestApplication extends EndpointTest {
 
     @Before
     public void checkSetup() {
-        checkAvailability("/");
+        checkAvailability("/available/");
     }
 
     @Test
     public void testProvider() throws Exception {
-        String ok = testEndpoint("/");
+        String ok = testEndpoint("/available/");
         assertNotNull("No response from API for provider", ok);
         assertTrue("OK was not found.", ok.contains("OK"));
     }
