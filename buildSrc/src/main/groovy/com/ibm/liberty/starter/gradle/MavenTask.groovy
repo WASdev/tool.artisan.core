@@ -23,6 +23,7 @@ import org.gradle.api.tasks.TaskAction
 class MavenTask extends DefaultTask {
     String id = 'unknown'
     String[] pomVersion = ['0.0.1']
+    String[] jarArtifacts = []
     boolean hasProvided = false;
     boolean hasRuntime = false;
     boolean hasCompile = false;
@@ -97,6 +98,16 @@ class MavenTask extends DefaultTask {
                 project.exec {  
                     commandLine cmd
                     args serverargs
+                }
+            }
+
+            int jarLength = jarArtifacts.length
+            for (def int j = 0; j < jarLength; j++) {
+                def jarsargs = generateMavenInstallArgs(jarArtifacts[j]+".jar", jarArtifacts[j], 'jar', pomVersion[i])
+                println "Installing jars"
+                project.exec {
+                    commandLine cmd
+                    args jarsargs
                 }
             }
         }
