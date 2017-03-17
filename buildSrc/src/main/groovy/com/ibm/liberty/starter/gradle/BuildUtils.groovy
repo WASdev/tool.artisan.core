@@ -62,19 +62,21 @@ class BuildUtils implements Plugin<Project> {
 			- write a file into the webapp section of the source tree so that is is pacakged
 		*/
 		project.task('createSwaggerJSON') << {
-			new ByteArrayOutputStream().withStream { osOut ->
-				def result = project.javaexec {
-					classpath = project.sourceSets.main.compileClasspath
-					main = 'com.sebastian_daschner.jaxrs_analyzer.Main'
-					standardOutput = osOut
-					args(['-b', 'swagger', project.buildDir.getAbsolutePath() + "/classes/main"])
+ 			if(new File(project.buildDir.getAbsolutePath() + "/classes/main").exists()) {
+				new ByteArrayOutputStream().withStream { osOut ->
+					def result = project.javaexec {
+						classpath = project.sourceSets.main.compileClasspath
+						main = 'com.sebastian_daschner.jaxrs_analyzer.Main'
+						standardOutput = osOut
+						args(['-b', 'swagger', project.buildDir.getAbsolutePath() + "/classes/main"])
+					}
+					def content = osOut.toString().replace('"basePath":"/api"', '"basePath":"' + project.buildutils.contextRoot + '/api"')
+					def json = new File(project.buildDir.getAbsolutePath() + "/war-generated/META-INF/swagger.json")
+					if(!json.getParentFile().exists()) {
+						json.getParentFile().mkdirs();
+					}
+					json.write(content)
 				}
-				def content = osOut.toString().replace('"basePath":"/api"', '"basePath":"' + project.buildutils.contextRoot + '/api"')
-				def json = new File(project.buildDir.getAbsolutePath() + "/war-generated/META-INF/swagger.json")
-				if(!json.getParentFile().exists()) {
-					json.getParentFile().mkdirs();
-				}
-				json.write(content)
 			}
 		}
 	}

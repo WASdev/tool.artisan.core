@@ -42,6 +42,19 @@ public class RepositoryCallInterceptor {
             String fileExtension = "net/wasdev/wlp/starters/" + tech + "/" + path;
             System.out.println("Request for artifact file " + fileExtension);
             ServiceConnector serviceConnector = new ServiceConnector(info.getBaseUri());
+
+            //special case for microprofile-apis since it's not a tech option
+            if(tech.equals("microprofile-apis")){
+              try {
+                  String endpoint = "/microprofile-apis";
+                  InputStream is = serviceConnector.getArtifactAsInputStream(endpoint, fileExtension);
+                  return Response.ok(is).build();
+              } catch (Exception e) {
+                  System.out.println("File " + fileExtension + " not found so returning a 404.");
+                  return Response.status(Status.NOT_FOUND).entity("File not found: " + fileExtension + " not found.").build();
+              }
+            }
+
             Service service = serviceConnector.getServiceObjectFromId(tech);
             if (service == null) {
                 return Response.status(Status.NOT_FOUND).entity("Tech type " + tech + " not found").build();

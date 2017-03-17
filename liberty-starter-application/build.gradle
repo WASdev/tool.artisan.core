@@ -47,12 +47,12 @@ dependencies {
     providedCompile group: 'javax.annotation', name: 'javax.annotation-api', version: '1.2'
     providedCompile group:'com.sebastian-daschner', name:'jaxrs-analyzer-maven-plugin', version:'0.9'
     providedCompile group: 'javax.validation', name: 'validation-api', version: '1.1.0.Final'
-    
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.19'
     testCompile group: 'org.apache.maven', name: 'maven-embedder', version: '3.3.1'
     testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
-    
+
     testRuntime group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.5'
     testRuntime group: 'org.apache.cxf', name: 'cxf-rt-rs-client', version: '3.1.1'
     testRuntime group: 'org.glassfish', name: 'javax.json', version: '1.0.4'
@@ -82,7 +82,7 @@ task compressSkeletonBuildImage(type: Zip) {
 }
 
 // Copy the base index.html file and pom.xml into resources so it is included in the war
-// These files are special as they will be munged before being put in the zip 
+// These files are special as they will be munged before being put in the zip
 task copySpecialFiles(type: Copy) {
     from 'skeletons/specialFiles'
     destinationDir = sourceSets.main.output.resourcesDir
@@ -131,9 +131,9 @@ task cleanDropins (type: Delete){
 }
 
 liberty {
-    install {
-        type = "javaee7"
-    }
+  install {
+      runtimeUrl = "http://repo1.maven.org/maven2/com/ibm/websphere/appserver/runtime/wlp-webProfile7/16.0.0.4/wlp-webProfile7-16.0.0.4.zip"
+  }
     serverName = 'StarterServer'
     userDir = '../liberty-starter-wlpcfg'
 
@@ -213,7 +213,7 @@ karma {
 }
 
 clean.dependsOn(':liberty-starter-wlpcfg:cleanServer', 'karmaClean')
-war.dependsOn(':liberty-filter-application:publishWar', ':starter-microservice-web:publishWar', ':starter-microservice-persistence:publishWar', ':starter-microservice-rest:publishWar', ':starter-microservice-websocket:publishWar', ':starter-microservice-springboot-web:publishWar', ':starter-microservice-watsonsdk:publishWar', ':starter-microservice-microprofile:publishWar', ':starter-microservice-swagger:publishWar', 'compressSkeletonBuildImage', 'copySpecialFiles', 'createSwaggerJSON')
+war.dependsOn(':liberty-filter-application:publishWar', ':starter-microservice-web:publishWar', ':starter-microservice-persistence:publishWar', ':starter-microservice-rest:publishWar', ':starter-microservice-websocket:publishWar', ':starter-microservice-springboot-web:publishWar', ':starter-microservice-watsonsdk:publishWar', ':starter-microservice-microprofile:publishWar', ':starter-microservice-swagger:publishWar', ':starter-microprofile-apis:publishWar', 'compressSkeletonBuildImage', 'copySpecialFiles', 'createSwaggerJSON')
 installFeature.dependsOn('installLiberty')
 libertyStart.dependsOn('installFeature', 'addServerEnv', ':starter-microservice-test:publishTestWar', 'publishWar')
 localRun.dependsOn('installFeature', 'publishWar')

@@ -48,5 +48,6 @@
     <application location="starter-microservice-websocket.war" id="websocket" context-root="/websocket"></application>
     <application location="starter-microservice-springboot-web.war" id="springbootweb" context-root="/springbootweb"></application>
     <application location="starter-microservice-microprofile.war" id="microprofile" context-root="/microprofile"></application>
+    <application location="starter-microprofile-apis.war" id="microprofile-apis" context-root="/microprofile-apis"></application>
     <application location="starter-microservice-swagger.war" id="swagger" context-root="/swagger"></application>
 </server>

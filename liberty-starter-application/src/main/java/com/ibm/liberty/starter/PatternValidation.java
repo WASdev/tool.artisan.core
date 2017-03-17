@@ -36,7 +36,7 @@ public class PatternValidation {
         Pattern pattern = Pattern.compile("");
         switch (patternType) {
             case TECH:
-                pattern = Pattern.compile("[a-z]*");
+                pattern = Pattern.compile("[a-z-]*");
                 break;
             case NAME:
                 pattern = Pattern.compile("[a-zA-Z0-9_-]*");
