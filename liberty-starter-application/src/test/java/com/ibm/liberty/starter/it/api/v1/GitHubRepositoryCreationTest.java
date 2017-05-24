@@ -65,7 +65,7 @@ public class GitHubRepositoryCreationTest {
         service.setId("wibble");
         List<Service> serviceList = Collections.singletonList(service);
         services.setServices(serviceList);
-        ProjectConstructionInputData inputData = new ProjectConstructionInputData(services, serviceConnector, name, ProjectConstructor.DeployType.LOCAL, ProjectConstructor.BuildType.MAVEN, null, null, null);
+        ProjectConstructionInputData inputData = new ProjectConstructionInputData(services, serviceConnector, name, ProjectConstructor.DeployType.LOCAL, ProjectConstructor.BuildType.MAVEN, null, null, null, false);
 
         ProjectConstructor constructor = new ProjectConstructor(inputData);
         GitHubConnector connector = new GitHubConnector(oAuthToken);

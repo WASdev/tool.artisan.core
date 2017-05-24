@@ -39,7 +39,8 @@ public class GitHubProjectEndpoint {
     @GET
     public Response getResponse(@QueryParam("tech") String[] techs, @QueryParam("techoptions") String[] techOptions, @QueryParam("name") String name,
                                 @QueryParam("deploy") String deploy, @QueryParam("workspace") String workspaceId, @QueryParam("build") String build,
-                                @QueryParam("artifactId") String artifactId, @QueryParam("groupId") String groupId, @Context UriInfo info) throws NullPointerException, IOException {
+                                @QueryParam("artifactId") String artifactId, @QueryParam("groupId") String groupId, @Context UriInfo info,
+                                @QueryParam("beta") boolean beta) throws NullPointerException, IOException {
         log.info("GET request for v1/createGitHubRepository");
         try {
             URI baseUri = info.getBaseUri();
@@ -51,7 +52,7 @@ public class GitHubProjectEndpoint {
             // rather than having to encode/decode it ourselves as well as providing checks on expiry times. Also a
             // JWT means that the callback becomes stateless rather than having to store the state object in the user's
             // session (although the workspace dir contains some state).
-            String state = inputProcessor.processInputAsJwt(techs, techOptions, name, deploy, workspaceId, build, artifactId, groupId);
+            String state = inputProcessor.processInputAsJwt(techs, techOptions, name, deploy, workspaceId, build, artifactId, groupId, beta);
             String clientId = (String) new InitialContext().lookup("gitHubClientId");
             URI gitHubAuth = new URI("https://github.com/login/oauth/authorize?client_id=" + clientId + "&scope=public_repo&state=" + state);
             log.info("redirecting to " + gitHubAuth);

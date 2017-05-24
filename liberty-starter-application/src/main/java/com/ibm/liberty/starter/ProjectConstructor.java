@@ -50,6 +50,7 @@ import com.ibm.liberty.starter.build.gradle.CreateArtifactConfigTags;
 import com.ibm.liberty.starter.build.gradle.CreateDependencyTags;
 import com.ibm.liberty.starter.build.gradle.CreateFeaturesTags;
 import com.ibm.liberty.starter.build.gradle.CreateRepositoryTags;
+import com.ibm.liberty.starter.build.gradle.CreateRuntimeTags;
 import com.ibm.liberty.starter.build.gradle.TemplatedFileToBytesConverter;
 import com.ibm.liberty.starter.build.maven.AddDependenciesCommand;
 import com.ibm.liberty.starter.build.maven.AddFeaturesCommand;
@@ -278,6 +279,8 @@ public class ProjectConstructor {
         buildTags.putAll(new CreateDependencyTags(depHand).getTags());
         buildTags.putAll(new CreateFeaturesTags(new FeaturesToInstallProvider(inputData.services, inputData.serviceConnector)).getTags());
         buildTags.putAll(new CreateRepositoryTags(depHand).getTags());
+        buildTags.putAll(new CreateRuntimeTags(inputData.beta).getTags());
+        log.log(Level.INFO, "JUNIARTI2 inputData.beta is " + inputData.beta);
         buildTags.putAll(new CreateArtifactConfigTags(inputData.artifactId, inputData.groupId).getTags());
         TemplatedFileToBytesConverter gradleBuildFileConverter = new TemplatedFileToBytesConverter(this.getClass().getClassLoader().getResourceAsStream(GRADLE_BUILD_FILE), buildTags);
         putFileInMap(GRADLE_BUILD_FILE, gradleBuildFileConverter.getBytes());

@@ -26,8 +26,9 @@ public class ProjectConstructionInputData {
     public final String workspaceDirectory;
     public final String artifactId;
     public final String groupId;
+    public final boolean beta;
 
-    public ProjectConstructionInputData(Services services, ServiceConnector serviceConnector, String appName, ProjectConstructor.DeployType deployType, ProjectConstructor.BuildType buildType, String workspaceDirectory, String artifactId, String groupId) {
+    public ProjectConstructionInputData(Services services, ServiceConnector serviceConnector, String appName, ProjectConstructor.DeployType deployType, ProjectConstructor.BuildType buildType, String workspaceDirectory, String artifactId, String groupId, boolean beta) {
         this.services = services;
         this.serviceConnector = serviceConnector;
         this.appName = appName;
@@ -36,5 +37,6 @@ public class ProjectConstructionInputData {
         this.workspaceDirectory = workspaceDirectory;
         this.artifactId = artifactId;
         this.groupId = groupId;
+        this.beta = beta;
     }
 }
