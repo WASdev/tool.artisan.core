@@ -37,8 +37,7 @@ public class SetRepositoryCommandTest {
         Node repositories = DomUtil.addChildNode(pom, project, "repositories", null);
         Node repository = DomUtil.addChildNode(pom, repositories, "repository", null);
         DomUtil.addChildNode(pom, repository, "id", "liberty-starter-maven-repo");
-        SetRepositoryCommand testObject = new SetRepositoryCommand(MockDependencyHandler.getDefaultInstance());
-        
+        SetRepositoryCommand testObject = new SetRepositoryCommand(MockDependencyHandler.getDefaultInstance());       
         testObject.modifyPom(pom);
 
         Node urlNode = DomUtil.getChildNode(repository, "url", null);
