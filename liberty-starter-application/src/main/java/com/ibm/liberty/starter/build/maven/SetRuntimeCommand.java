@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 IBM Corp.
+ * Copyright (c) 2017 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ public class SetRuntimeCommand implements PomModifierCommand {
     private Logger log = Logger.getLogger(SetRuntimeCommand.class.getName());
 
     public SetRuntimeCommand(boolean beta) {
-    	isBeta = beta;
-    	log.log(Level.INFO, "SetRuntimeCommand isBeta " + beta);
+        isBeta = beta;
+        log.log(Level.INFO, "SetRuntimeCommand isBeta " + beta);
     }
 
     @Override
