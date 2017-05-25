@@ -64,6 +64,6 @@ public class SetRuntimeCommandTest {
 
         Node configNode = DomUtil.getChildNode(plugin, "configuration", null);
         assertThat(configNode, notNullValue());
-        assertThat(configNode.getTextContent(), is("17.0.0.1"));
+        assertThat(configNode.getTextContent(), is("com.ibm.websphere.appserver.runtimewlp-webProfile717.0.0.1zip"));
     }
 }
