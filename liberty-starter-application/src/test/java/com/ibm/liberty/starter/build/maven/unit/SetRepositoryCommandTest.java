@@ -20,7 +20,9 @@ import com.ibm.liberty.starter.build.maven.SetRepositoryCommand;
 import com.ibm.liberty.starter.unit.MockDependencyHandler;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -38,7 +40,7 @@ public class SetRepositoryCommandTest {
         Node repository = DomUtil.addChildNode(pom, repositories, "repository", null);
         DomUtil.addChildNode(pom, repository, "id", "liberty-starter-maven-repo");
         SetRepositoryCommand testObject = new SetRepositoryCommand(MockDependencyHandler.getDefaultInstance());
-
+        
         testObject.modifyPom(pom);
 
         Node urlNode = DomUtil.getChildNode(repository, "url", null);

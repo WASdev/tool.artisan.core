@@ -60,6 +60,7 @@ import com.ibm.liberty.starter.build.maven.PomModifier;
 import com.ibm.liberty.starter.build.maven.PomModifierCommand;
 import com.ibm.liberty.starter.build.maven.SetDefaultProfileCommand;
 import com.ibm.liberty.starter.build.maven.SetRepositoryCommand;
+import com.ibm.liberty.starter.build.maven.SetRuntimeCommand;
 
 public class ProjectConstructor {
     
@@ -280,7 +281,6 @@ public class ProjectConstructor {
         buildTags.putAll(new CreateFeaturesTags(new FeaturesToInstallProvider(inputData.services, inputData.serviceConnector)).getTags());
         buildTags.putAll(new CreateRepositoryTags(depHand).getTags());
         buildTags.putAll(new CreateRuntimeTags(inputData.beta).getTags());
-        log.log(Level.INFO, "JUNIARTI2 inputData.beta is " + inputData.beta);
         buildTags.putAll(new CreateArtifactConfigTags(inputData.artifactId, inputData.groupId).getTags());
         TemplatedFileToBytesConverter gradleBuildFileConverter = new TemplatedFileToBytesConverter(this.getClass().getClassLoader().getResourceAsStream(GRADLE_BUILD_FILE), buildTags);
         putFileInMap(GRADLE_BUILD_FILE, gradleBuildFileConverter.getBytes());
@@ -298,6 +298,7 @@ public class ProjectConstructor {
         commands.add(new AppNameCommand(depHand));
         commands.add(new SetDefaultProfileCommand(inputData.deployType));
         commands.add(new SetRepositoryCommand(depHand));
+        commands.add(new SetRuntimeCommand(inputData.beta));
         commands.add(new AddFeaturesCommand(new FeaturesToInstallProvider(inputData.services, inputData.serviceConnector)));
         commands.add(new AppArtifactConfigCommand(inputData.artifactId, inputData.groupId));
         PomModifier pomModifier = new PomModifier(inputStream, commands);

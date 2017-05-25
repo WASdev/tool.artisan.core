@@ -112,7 +112,7 @@ public class ProjectConstructionInput {
         claims.put(GROUP_ID_KEY, inputData.groupId);
         claims.put(BETA_KEY, inputData.beta);
         claims.put(SERVICE_IDS_KEY, inputData.services.getServices().stream().map(service -> service.getId()).collect(Collectors.toList()));
-
+        
         Calendar issuedAt = Calendar.getInstance();
         claims.setIssuedAt(issuedAt.getTime());
         Calendar expires = Calendar.getInstance();
