@@ -41,8 +41,7 @@ public class SetRuntimeCommandTest {
         Node plugin = DomUtil.addChildNode(pom, plugins, "plugin", null);
         Node artifactId = DomUtil.addChildNode(pom, plugin, "artifactId", "liberty-maven-plugin");
         Node configuration = DomUtil.addChildNode(pom, plugin, "configuration", null);    
-        SetRuntimeCommand testObject = new SetRuntimeCommand(true);
-      
+        SetRuntimeCommand testObject = new SetRuntimeCommand(true);    
         testObject.modifyPom(pom);
 
         Node configNode = DomUtil.getChildNode(plugin, "configuration", null);
