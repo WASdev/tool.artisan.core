@@ -144,7 +144,7 @@ public class ProjectConstructionInput {
                 (String) claims.get(WORKSPACE_DIR_KEY),
                 (String) claims.get(ARTIFACT_ID_KEY),
                 (String) claims.get(GROUP_ID_KEY),
-        		(boolean) claims.get(BETA_KEY));
+                (boolean) claims.get(BETA_KEY));
     }
 
     private String getAppAcceleratorSecret() throws NamingException {
