@@ -54,6 +54,7 @@ public class MavenPomPayloadTest {
     private String groupId = "";
     private int responseStatus;
     private Object contentDisposition;
+    private String configuration = "";
 
     @Test
     public void testTestMicroservice() throws Exception {
@@ -89,6 +90,20 @@ public class MavenPomPayloadTest {
         String queryString = "tech=test&name=Test&groupId=test.group.id&deploy=local";
         callDataEndpoint(queryString);
         assertTrue("Expected test.group.id groupId. Found " + groupId, "test.group.id".equals(groupId));
+    }
+    
+    @Test
+    public void testBetaFlagInserted() throws Exception {
+        String queryString = "tech=test&name=Test&groupId=test.group.id&deploy=local&beta=true";
+        callDataEndpoint(queryString);
+        assertTrue("Expected beta image. Found " + configuration, configuration.contains("beta"));
+    }
+    
+    @Test
+    public void testBetaFlagNotInserted() throws Exception {
+        String queryString = "tech=test&name=Test&groupId=test.group.id&deploy=local";
+        callDataEndpoint(queryString);
+        assertTrue("Expected 17.0.0.1 image. Found " + configuration, configuration.contains("17.0.0.1"));
     }
 
     @Test
@@ -175,6 +190,7 @@ public class MavenPomPayloadTest {
                 parsePomConfig(doc);
                 parseDependencies(doc.getElementsByTagName("dependencies"));
                 parseRepositories(doc.getElementsByTagName("repository"));
+                parsePlugin(doc.getElementsByTagName("plugin"), "liberty-maven-plugin");
                 break;
             }
             zipIn.closeEntry();
@@ -233,5 +249,19 @@ public class MavenPomPayloadTest {
         artifactId = artifactIdNode.getTextContent();
         Node groupIdNode = DomUtil.getChildNode(project, "groupId", null);
         groupId = groupIdNode.getTextContent();
+    }
+    
+    private void parsePlugin(NodeList pluginNodeList, String artifactId) {
+        for (int i = 0; i < pluginNodeList.getLength(); i++) {
+        	Element pluginNode = (Element) pluginNodeList.item(i);
+            if (DomUtil.nodeHasId(pluginNode, artifactId)) {
+            	NodeList configNodeList = pluginNode.getElementsByTagName("configuration");
+            	Node configNode = configNodeList.item(0);
+            	if (configNode != null) {
+            		configuration = configNode.getTextContent();
+            		System.out.println("Configuration is " + configuration);
+            	}
+            }
+        }
     }
 }

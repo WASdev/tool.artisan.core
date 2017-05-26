@@ -64,7 +64,7 @@ public class GradleBuildFilePayloadTest {
     @Test
     public void artifactIdInserted() throws Exception {
         File buildFile = new File(settingsFilePath + ".artifactIdInserted");
-        String queryString = "tech=test&name=Test&artifactId=testArtifactId&deploy=local&build=gradle";
+        String queryString = "tech=test&name=TestApp&artifactId=testArtifactId&deploy=local&build=gradle";
         callDataEndpoint(queryString, ".artifactIdInserted");
         assertThat(buildFile, containsLinesInRelativeOrder(containsString("rootProject.name = 'testArtifactId'")));
     }
@@ -72,9 +72,25 @@ public class GradleBuildFilePayloadTest {
     @Test
     public void groupIdInserted() throws Exception {
         File buildFile = new File(buildFilePath + ".groupIdInserted");
-        String queryString = "tech=test&name=Test&groupId=test.group.id&deploy=local&build=gradle";
+        String queryString = "tech=test&name=TestApp&groupId=test.group.id&deploy=local&build=gradle";
         callDataEndpoint(queryString, ".groupIdInserted");
         assertThat(buildFile, containsLinesInRelativeOrder(containsString("group = 'test.group.id'")));
+    }
+     
+    @Test
+    public void betaFlagInserted() throws Exception {
+        File buildFile = new File(buildFilePath + ".betaFlagInserted");
+        String queryString = "tech=test&name=TestApp&deploy=local&build=gradle&beta=true";
+        callDataEndpoint(queryString, ".betaFlagInserted");
+        assertThat(buildFile, containsLinesInRelativeOrder(containsString("wlp-beta")));
+    }
+
+    @Test
+    public void betaFlagNotInserted() throws Exception {
+        File buildFile = new File(buildFilePath + ".betaFlagNotInserted");
+        String queryString = "tech=test&name=TestApp&deploy=local&build=gradle";
+        callDataEndpoint(queryString, ".betaFlagNotInserted");
+        assertThat(buildFile, containsLinesInRelativeOrder(containsString("wlp-webProfile7")));
     }
     
     private void callDataEndpoint(String queryString, String fileEnding) throws Exception {
