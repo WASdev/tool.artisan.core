@@ -50,8 +50,16 @@ public class SetRuntimeCommand implements PomModifierCommand {
             			Node installNode = pom.createElement("install");
             			configNode.appendChild(installNode);
             			Node typeNode = pom.createElement("type");
+            			/*
             			typeNode.setTextContent("beta");
             			installNode.appendChild(typeNode);
+            			*/
+            			typeNode.setTextContent("webProfile7");
+            			installNode.appendChild(typeNode);
+            			Node versionNode = pom.createElement("version");
+            			versionNode.setTextContent("2017.+");
+            			//versionNode.setTextContent("2017.5.0_0");
+            			installNode.appendChild(versionNode);
             			foundPluginNode = true;
             		} else {
             			Node assemblyNode = pom.createElement("assemblyArtifact");

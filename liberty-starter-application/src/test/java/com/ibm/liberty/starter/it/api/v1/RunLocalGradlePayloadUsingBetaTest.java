@@ -35,9 +35,9 @@ import static org.junit.Assert.assertThat;
 
 public class RunLocalGradlePayloadUsingBetaTest {
 
-    private final static String tempDir = System.getProperty("liberty.temp.dir") + "/localGradlePayloadTest";
-    private final static String installLog = tempDir + "/gradleLog/log.txt";
-    private final static File stopServerLog = new File(tempDir + "/gradleLog/stopServer.txt");
+    private final static String tempDir = System.getProperty("liberty.temp.dir") + "/localGradlePayloadTestBeta";
+    private final static String installLog = tempDir + "/gradleLog/logBeta.txt";
+    private final static File stopServerLog = new File(tempDir + "/gradleLog/stopServerBeta.txt");
 
     @Rule
     public DownloadedZip zip = new DownloadedZip(tempDir, "build=gradle", "beta=true");

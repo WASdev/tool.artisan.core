@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 IBM Corp.
+ * Copyright (c) 2016 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ import static org.junit.Assert.assertThat;
 
 public class RunLocalMavenPayloadUsingBetaTest {
 
-    private final static String tempDir = System.getProperty("liberty.temp.dir") + "/localPayloadTest";
-    private final static String installLog = tempDir + "/mvnLog/log.txt";
-    private final static File stopServerLog = new File(tempDir + "/mvnLog/stopServer.txt");
+    private final static String tempDir = System.getProperty("liberty.temp.dir") + "/localPayloadTestBeta";
+    private final static String installLog = tempDir + "/mvnLog/logBeta.txt";
+    private final static File stopServerLog = new File(tempDir + "/mvnLog/stopServerBeta.txt");
 
     @Rule
     public DownloadedZip zip = new DownloadedZip(tempDir, "beta=true");
@@ -48,7 +48,6 @@ public class RunLocalMavenPayloadUsingBetaTest {
     public void testLocalMvnInstallRuns() throws Exception {
         File logFile = new File(installLog);
         String pathToOutputZip = zip.getLocation() + "/target/TestApp.zip";
-        
         runMvnInstallLibertyRunOnSeperateThread(logFile);
         
         Matcher<File> logContainsServerStartedForLocalServer = containsLinesInRelativeOrder(containsString("run-server"), containsString("CWWKF0011I"));
