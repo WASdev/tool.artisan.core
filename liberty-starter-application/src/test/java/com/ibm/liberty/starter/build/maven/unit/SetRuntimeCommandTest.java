@@ -47,9 +47,7 @@ public class SetRuntimeCommandTest {
         Node configNode = DomUtil.getChildNode(plugin, "configuration", null);
         assertThat(configNode, notNullValue());
         System.out.println("configuration is " + configNode.getTextContent());
-        //assertThat(configNode.getTextContent(), is("webProfile72017.5.0_0"));
         assertThat(configNode.getTextContent(), is("webProfile72017.+"));
-        //assertThat(configNode.getTextContent(), is("beta"));
     }
 
     @Test

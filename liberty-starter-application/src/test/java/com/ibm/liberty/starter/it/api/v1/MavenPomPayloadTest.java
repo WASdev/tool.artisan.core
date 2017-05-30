@@ -97,7 +97,6 @@ public class MavenPomPayloadTest {
         String queryString = "tech=test&name=Test&groupId=test.group.id&deploy=local&beta=true";
         callDataEndpoint(queryString);
         assertTrue("Expected beta image. Found " + configuration, configuration.contains("webProfile7"));
-        //assertTrue("Expected beta image. Found " + configuration, configuration.contains("beta"));
     }
     
     @Test
