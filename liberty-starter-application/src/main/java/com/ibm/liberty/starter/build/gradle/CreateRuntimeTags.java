@@ -23,8 +23,8 @@ import java.util.logging.Logger;
 public class CreateRuntimeTags {
     private final String runtimeUrl;
     private Logger log = Logger.getLogger(CreateRuntimeTags.class.getName());
-    private final static String betaURL = "https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/downloads/wlp/beta/wlp-beta-2017.5.0.0.zip";
-    private final static String GAURL = "http://repo1.maven.org/maven2/com/ibm/websphere/appserver/runtime/wlp-webProfile7/17.0.0.1/wlp-webProfile7-17.0.0.1.zip";
+    private final static String betaURL = "version = \"2017.+\"";
+    private final static String GAURL = "runtimeUrl = \"http://repo1.maven.org/maven2/com/ibm/websphere/appserver/runtime/wlp-webProfile7/17.0.0.1/wlp-webProfile7-17.0.0.1.zip\"";
     
     public CreateRuntimeTags(boolean beta) {
     	log.log(Level.INFO, "Use beta is " + beta);

@@ -39,9 +39,9 @@ public class CreateRuntimeTagsTest {
         Map<String, String> tags = testObject.getTags();
 
         assertThat(tags.size(), is(1));
-        assertThat(tags, hasEntry("RUNTIME_URL", "https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/downloads/wlp/beta/wlp-beta-2017.5.0.0.zip"));
+        assertThat(tags, hasEntry("RUNTIME_URL", "version = \"2017.+\""));
     }
-
+    
     @Test
     public void repositoryTagNotSetBetaFlag() throws URISyntaxException {
         CreateRuntimeTags testObject = new CreateRuntimeTags(false);
@@ -49,7 +49,7 @@ public class CreateRuntimeTagsTest {
         Map<String, String> tags = testObject.getTags();
 
         assertThat(tags.size(), is(1));
-        assertThat(tags, hasEntry("RUNTIME_URL", "http://repo1.maven.org/maven2/com/ibm/websphere/appserver/runtime/wlp-webProfile7/17.0.0.1/wlp-webProfile7-17.0.0.1.zip"));
+        assertThat(tags, hasEntry("RUNTIME_URL", "runtimeUrl = \"http://repo1.maven.org/maven2/com/ibm/websphere/appserver/runtime/wlp-webProfile7/17.0.0.1/wlp-webProfile7-17.0.0.1.zip\""));
     }
 
 }

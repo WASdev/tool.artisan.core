@@ -145,7 +145,7 @@ task createServerBootstrap() {
 
 liberty {
     install {
-        runtimeUrl = "%RUNTIME_URL%"
+        %RUNTIME_URL%
     }
     serverName = wlpServerName
     packageLiberty {

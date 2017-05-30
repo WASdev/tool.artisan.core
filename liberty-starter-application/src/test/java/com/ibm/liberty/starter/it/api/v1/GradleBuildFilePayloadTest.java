@@ -82,7 +82,7 @@ public class GradleBuildFilePayloadTest {
         File buildFile = new File(buildFilePath + ".betaFlagInserted");
         String queryString = "tech=test&name=TestApp&deploy=local&build=gradle&beta=true";
         callDataEndpoint(queryString, ".betaFlagInserted");
-        assertThat(buildFile, containsLinesInRelativeOrder(containsString("wlp-beta")));
+        assertThat(buildFile, containsLinesInRelativeOrder(containsString("2017.+")));
     }
 
     @Test
