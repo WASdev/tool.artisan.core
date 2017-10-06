@@ -110,7 +110,7 @@
                     <div class="panel-body">
                         <p class="instruction">Access your application at: </p>
                         <div ng-show="!deploy.bluemix">
-                            <p class="instructionRun"><a href="http://localhost:9080/myLibertyApp/" target="_blank" ng-click="sendGAEvent('Outbound', 'app endpoint', 'local')">http://localhost:9080/myLibertyApp/</a></p>
+                            <p class="instructionRun"><a href="http://localhost:9080/{{deploy.name}}/" target="_blank" ng-click="sendGAEvent('Outbound', 'app endpoint', 'local')">http://localhost:9080/{{deploy.name}}/</a></p>
                         </div>
                         <div ng-show="deploy.bluemix">
                             <p class="instructionRun"><a href="http://{{deploy.name}}.mybluemix.net/myLibertyApp/" target="_blank" ng-click="sendGAEvent('Outbound', 'app endpoint', 'bluemix')">http://{{deploy.name}}.mybluemix.net/myLibertyApp/</a></p>
@@ -124,7 +124,8 @@
                         <p class="instructionRun">src/main/java</p>
                         <div ng-show="!deploy.bluemix">
                             <p class="instruction">Your Liberty server can be found in: </p>
-                            <p class="instructionRun">target/wlp/usr/servers/LibertyProjectServer</p>
+                            <p class="instructionRun" ng-show="deploy.buildType == buildType.MAVEN">target/wlp/usr/servers/LibertyProjectServer</p>
+                            <p class="instructionRun" ng-show="deploy.buildType == buildType.GRADLE">build/wlp/usr/servers/defaultServer</p>
                         </div>
                         <p class="instruction">Optionally, <a href="wdt.html" target="_blank" ng-click="sendGAEvent('Outbound', 'resources', 'WDT')">import your project</a> into WebSphere Developer Tool</p>
                     </div>
