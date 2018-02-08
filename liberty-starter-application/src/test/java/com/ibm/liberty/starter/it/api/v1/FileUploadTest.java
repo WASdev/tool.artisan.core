@@ -79,7 +79,7 @@ public class FileUploadTest {
         responseCode = invokeUploadEndpoint("tech=swagger&workspace=" + uuid + "&cleanup=true&process=true", "sampleUpload3.json", getBasicSwagger("CollectiveInfo3"));
         assertEquals("Response 3 was incorrect, response was " + responseCode, Response.Status.OK.getStatusCode(), responseCode);
         
-        // Invoke the v1/data endpoint to ensure that the packaged files are contained within the zip and the features to
+        // Invoke the v1/data endpoint to ensure that the packaged files are contained within the zip and the features to 
         // install specified by the 'swagger' tech type are present within pom.xml
         Client client = ClientBuilder.newClient();
         String port = System.getProperty("liberty.test.port");
@@ -104,7 +104,7 @@ public class FileUploadTest {
             boolean deletedFileExists = false;
             boolean foundFeaturesToInstall = false;
             boolean foundPluginNode = false;
-            boolean foundAcceptLicense = false;
+            boolean foundInstallNode = false;
             String zipEntries = "";
             Document pomContents = null;
             while ((inputEntry = zipIn.getNextEntry()) != null) {
@@ -135,11 +135,18 @@ public class FileUploadTest {
                         Element pluginNode = (Element) pluginNodeList.item(i);
                         if (DomUtil.nodeHasId(pluginNode, "liberty-maven-plugin")) {
                             foundPluginNode = true;
-                            Node features = pluginNode.getElementsByTagName("features").item(0);
-                            assertTrue("acceptLicense node with property true was not found", hasChildNode(features, "acceptLicense", "true"));
-                            foundAcceptLicense = true;
-                            foundFeaturesToInstall = true;
-                            
+                            Node executions = pluginNode.getElementsByTagName("executions").item(0);
+                            NodeList executionNodes = ((Element) executions).getChildNodes();
+                            for (int j = 0; j < executionNodes.getLength(); j++) {
+                                Node execution = executionNodes.item(j);
+                                if (DomUtil.nodeHasId(execution, "install-feature")) {
+                                    foundInstallNode = true;
+                                    Node config = ((Element) execution).getElementsByTagName("configuration").item(0);
+                                    Node features = ((Element) config).getElementsByTagName("features").item(0);
+                                    assertTrue("acceptLicense node with property true was not found", hasChildNode(features, "acceptLicense", "true"));
+                                    foundFeaturesToInstall = true;
+                                }
+                            }
                         }
                     }
                 }
@@ -149,7 +156,7 @@ public class FileUploadTest {
             assertTrue("Model file doesn't exist at src/main/java/io/swagger/model/CollectiveInfo3.java in the zip file. Entries found:" + zipEntries, modelFileExists);
             assertTrue("API file doesn't exist at src/main/java/io/swagger/api/IbmApi.java in the zip file. Entries found:" + zipEntries, apiFileExists);
             assertTrue("liberty-maven-plugin node was not found", foundPluginNode);
-            assertTrue("acceptLicense node was not found", foundAcceptLicense);
+            assertTrue("install-feature node was not found", foundInstallNode);
             assertTrue("Features to install were not found in pom.xml from the zip file.", foundFeaturesToInstall);
             assertFalse("Deleted file exists in the zip file. Entries found:" + zipEntries, deletedFileExists);
         } finally {
@@ -174,7 +181,7 @@ public class FileUploadTest {
     /**
          * Get all matching child nodes
          * @param parentNode - the parent node
-         * @param name - name of child node to match
+         * @param name - name of child node to match 
          * @param value - value of child node to match, specify null to not match value
          * @return matching child nodes
          */
@@ -200,7 +207,7 @@ public class FileUploadTest {
     /**
      * Get the matching child node
      * @param parentNode - the parent node
-     * @param name - name of child node to match
+     * @param name - name of child node to match 
      * @param value - value of child node to match
      * @return the child node if a match was found, null otherwise
      */
