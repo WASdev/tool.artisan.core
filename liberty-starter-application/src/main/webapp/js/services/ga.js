@@ -50,7 +50,6 @@ angular.module('appAccelerator')
 
      if (googleAnalytics) {
          ga('create', 'UA-70962553-1', 'auto');
-         ga('set', 'anonymizeIp', true);
          ga('send', 'pageview');
      }
 
